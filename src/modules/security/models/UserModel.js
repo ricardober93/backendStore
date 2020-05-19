@@ -1,6 +1,7 @@
-import mongoose from "mongoose";
+import {Schema,model} from "mongoose";
+import uniqueValidator from "mongoose-unique-validator"
 
-const UserModel = new mongoose.Schema({
+const UserModel = new Schema({
   username: {
     type: String,
     required: true,
@@ -18,29 +19,39 @@ const UserModel = new mongoose.Schema({
     type: String,
     required: true
   },
+  lastname: {
+    type:String,
+    required: true
+  },
   password: {
     type: String,
     required: true,
   },
   avatar: {
     type: String,
-    default: 'assets/avatar/user.png'
+    // default: 'assets/avatar/user.png'
   },
   state: {
-    type: Boolean
+    type: Boolean,
+    default: false
   },
   tokenPassword: {
-    type: String
+    type: String,
+    default: null
   },
-  _expirationPassword: {
-    type: String
+  expirationPassword: {
+    type: String,
+    default: null
   },
   role: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.ObjectId,
     ref: 'role'
   }
 })
 
-const User = mongoose.model('user', UserModel)
+//Methods
+UserModel.plugin(uniqueValidator)
+
+const User = model('user', UserModel)
 
 export default User

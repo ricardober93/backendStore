@@ -1,12 +1,13 @@
-//Dependencias
+//Dependencies
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import express from 'express';
 import corsMiddleware from "./corsMiddleware";
+import routes from './src/modules/security/routes'
 const app = express();
 mongoose.set('useCreateIndex', true);
 dotenv.config();
-const port = process.env.PORT_BACKEND
+const port = process.env.PORT_BACKEND || 8000
 
 //Swagger
 import swaggerUi from 'swagger-ui-express';
@@ -23,13 +24,19 @@ app.use(function (err, req, res, next) {
 app.use(corsMiddleware);
 
 //Body Parse
+app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
+//Routes
+app.use(routes())
+
 //Se conecta con MongoDB
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, socketTimeoutMS: 10000, })
-    .then(() => console.log('Conectado correctamente a MongoDB'))
-    .catch(() => console.log('Error al conectarse a MongoDB'))
 
+    //Connecting database first
+    mongoose.connect('mongodb://localhost/tienda', { useNewUrlParser: true, useUnifiedTopology: true, socketTimeoutMS: 10000, useFindAndModify: false, useCreateIndex: true })
+        .then(() => console.log('Conectado correctamente a MongoDB'))
+        .catch(() => console.log('Error al conectarse a MongoDB'))
+    
+    //Then initializate server
+    app.listen(port, () => console.log('Escuchando puerto: ' + port));
 
-app.get('/hello', (req, res) => { res.send("Hello") })
-app.listen(port, () => console.log('Escuchando puerto: ' + port));
