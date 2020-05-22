@@ -3,7 +3,8 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import express from 'express';
 import corsMiddleware from "./corsMiddleware";
-import routes from './src/modules/security/routes'
+import routesSecurity from './src/modules/security/routes'
+import routesCustomization from './src/modules/customization/routes'
 const app = express();
 mongoose.set('useCreateIndex', true);
 dotenv.config();
@@ -28,7 +29,8 @@ app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
 //Routes
-app.use(routes())
+app.use(routesSecurity())
+app.use(routesCustomization())
 
 //Se conecta con MongoDB
 
