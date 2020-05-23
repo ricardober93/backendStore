@@ -2,6 +2,7 @@
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import express from 'express';
+import {logger} from './src/modules/logger/logger';
 import corsMiddleware from "./src/modules/middleware/corsMiddleware";
 import securityRoutes from './src/modules/security/routes'
 import customizationRoutes from './src/modules/customization/routes'
@@ -36,9 +37,9 @@ app.use('/', customizationRoutes);
 
 //Connecting database first
 mongoose.connect('mongodb://localhost/tienda', { useNewUrlParser: true, useUnifiedTopology: true, socketTimeoutMS: 10000, useFindAndModify: false, useCreateIndex: true })
-    .then(() => console.log('Conectado correctamente a MongoDB'))
-    .catch(() => console.log('Error al conectarse a MongoDB'))
+    .then(() => logger.info('Conectado correctamente a MongoDB'))
+    .catch(() => logger.info('Error al conectarse a MongoDB'))
 
 //Then initializate server
-app.listen(port, () => console.log('Escuchando puerto: ' + port));
+app.listen(port, () => logger.info('Escuchando puerto: ' + port));
 
