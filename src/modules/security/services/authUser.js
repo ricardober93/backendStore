@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import Role from '../models/Role'
+import Role from '../models/RoleModel'
 
 exports.generateToken = async (user) => {
     const {role,_id,username,name,lastname,email} = user
@@ -26,8 +26,6 @@ exports.generateToken = async (user) => {
             }
         }
 }
-
-
 
 exports.validateToken = (req, res, next) => {
     const tokenHeader = req.get('Autorization')

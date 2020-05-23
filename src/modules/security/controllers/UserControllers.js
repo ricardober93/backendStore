@@ -1,17 +1,39 @@
 import User from '../models/UserModel'
-import Role from '../models/Role'
+import Role from '../models/RoleModel'
 import bcrypt from 'bcrypt'
 import shortid from 'shortid'
 import jwt from 'jsonwebtoken'
+import { logRequest } from '../../logger/logger';
+import { validationResult } from "express-validator";
 import {generateToken} from '../services/authUser'
 
 //Register
 exports.signup = async (req,res,next) => {
+    
+    logRequest(req)
+
     const { lastname, email, name, password } = req.body;
+
+    let response = {
+        errors: [],
+        msg: '',
+        data: {},
+    }
+    
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        response.errors = errors.array()
+        response.msg = 'La petición no fue exitosa'
+        res.status(400).json(response) 
+        next()
+    }
 
     //Validate fields required in models User
     if( !name || !lastname || !email || !password ){
-        res.status(400).json({error: true, message: 'Todos los campos son obligatorios'})
+        response.errors = true
+        response.msg = 'Todos los campos son obligatorios'
+        res.status(400).json(response)
         return next()
     }
 
@@ -31,7 +53,6 @@ exports.signup = async (req,res,next) => {
         const {role} = req.body
         const rolesAndPermissions = await Role.findOne({name: role.name})
         user.role = rolesAndPermissions
-
     } else{
         const defaultRole = await Role.findOne({name:'user'})
         user.role = defaultRole
@@ -39,12 +60,13 @@ exports.signup = async (req,res,next) => {
   
     try {
         await user.save()
-        res.status(200).json({message: 'User is created succesfuly'})
+        response.msg = 'User is created succesfuly'
+        res.status(200).json(response)
 
-    } catch (err) {
-
-        res.status(500).json({error: true, message: err})
-        console.log(err)
+    } catch (error) {
+        response.errors = true
+        response.msg = error
+        res.status(500).json(response)
         next()
     }
 }
@@ -52,10 +74,27 @@ exports.signup = async (req,res,next) => {
 //Login
 exports.signin = async (req,res,next) => {
 
+    logRequest(req)
+
     const { password, email } = req.body;
 
+    let response = {
+        errors: [],
+        msg: '',
+        data: {},
+    }
+    
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        response.errors = errors.array()
+        response.msg = 'La petición no fue exitosa'
+        res.status(400).json(response) 
+        next()
+    }
+
     if(password == '' || email == ''){
-        res.json({message: 'Todos los campos son obligatorios'})
+        res.json({msg: 'Todos los campos son obligatorios'})
         next()
     }
 
@@ -63,23 +102,26 @@ exports.signin = async (req,res,next) => {
         
         const user = await User.findOne({email})
         if(!user){
-            res.status(401).json({message:'No existe el usuario'})
+            response.msg = 'No existe el usuario'
+            res.status(401).json(response) 
             next()
         }
         else{
             if(!bcrypt.compare(user.password, password)){
-                res.status(401).json({message:'Contraseña incorrecta'})
+                response.msg = 'Contraseña incorrecta'
+                res.status(401).json(response)
                 next()
             }
             //All right
             else{
                 const sendToken = await generateToken(user)
-                res.status(200).json(sendToken)
+                response.data = sendToken
+                res.status(200).json(response)
+                next()
             }
         }
-
     } catch (error) {
-        console.log(error)
+        console.error(error)
         next()
     }
 }

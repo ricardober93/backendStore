@@ -2,9 +2,10 @@
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import express from 'express';
-import corsMiddleware from "./corsMiddleware";
-import routesSecurity from './src/modules/security/routes'
-import routesCustomization from './src/modules/customization/routes'
+import {logger} from './src/modules/logger/logger';
+import corsMiddleware from "./src/modules/middleware/corsMiddleware";
+import securityRoutes from './src/modules/security/routes'
+import customizationRoutes from './src/modules/customization/routes'
 const app = express();
 mongoose.set('useCreateIndex', true);
 dotenv.config();
@@ -29,16 +30,16 @@ app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
 //Routes
-app.use(routesSecurity())
-app.use(routesCustomization())
+app.use('/', securityRoutes);
+app.use('/', customizationRoutes);
 
 //Se conecta con MongoDB
 
-    //Connecting database first
-    mongoose.connect('mongodb://localhost/tienda', { useNewUrlParser: true, useUnifiedTopology: true, socketTimeoutMS: 10000, useFindAndModify: false, useCreateIndex: true })
-        .then(() => console.log('Conectado correctamente a MongoDB'))
-        .catch(() => console.log('Error al conectarse a MongoDB'))
-    
-    //Then initializate server
-    app.listen(port, () => console.log('Escuchando puerto: ' + port));
+//Connecting database first
+mongoose.connect('mongodb://localhost/tienda', { useNewUrlParser: true, useUnifiedTopology: true, socketTimeoutMS: 10000, useFindAndModify: false, useCreateIndex: true })
+    .then(() => logger.info('Conectado correctamente a MongoDB'))
+    .catch(() => logger.info('Error al conectarse a MongoDB'))
+
+//Then initializate server
+app.listen(port, () => logger.info('Escuchando puerto: ' + port));
 
