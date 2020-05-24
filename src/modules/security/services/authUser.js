@@ -1,29 +1,22 @@
 import jwt from 'jsonwebtoken'
 import Role from '../models/RoleModel'
+import passport from 'passport'
+
 
 exports.generateToken = async (user) => {
-    const {role,_id,username,name,lastname,email} = user
+    const {role,_id} = user
     
     const viewRole = await Role.findById(role)
     const exp = viewRole.name == 'admin' ? '5h' : '1h'
 
     const token = jwt.sign({
-            id: _id,
-            name: user.name,
-            email: user.email,
+            id: user.id,
             role: viewRole.name
         }, 'REEMPLACEN',{
             expiresIn: exp 
         })
     return {
-            token: token,
-            user: {
-                _id,
-                username,
-                name,
-                lastname,
-                email
-            }
+            token: token
         }
 }
 
@@ -34,7 +27,7 @@ exports.validateToken = (req, res, next) => {
       const error = new Error('No estas autorizado')
       error.codeStatus = 401
       throw error
-    }
+}
     
     //Verify token
     const token = tokenHeader.split('  ')[1]
@@ -55,3 +48,8 @@ exports.validateToken = (req, res, next) => {
     next()
 }
 
+exports.googleScope = passport.authenticate('google',{scope:['profile','email']})
+
+exports.google = passport.authenticate('google')
+
+exports.facebook = passport.authenticate('facebook')

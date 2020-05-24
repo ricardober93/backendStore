@@ -42,12 +42,13 @@ exports.signup = async (req,res,next) => {
     const user = new User({
         username,
         name,
-        lastname,
-        email,
-        password
+        lastname
     })
+    user.method = 'local'
+    user.local.email = email
+    user.local.password = password
 
-    user.password = await bcrypt.hash( req.body.password, 12)
+    user.local.password = await bcrypt.hash( req.body.password, 12)
 
     if(req.body.role){
         const {role} = req.body
@@ -75,7 +76,7 @@ exports.signup = async (req,res,next) => {
 exports.signin = async (req,res,next) => {
 
     logRequest(req)
-
+    
     const { password, email } = req.body;
 
     let response = {
@@ -100,14 +101,14 @@ exports.signin = async (req,res,next) => {
 
     try {
         
-        const user = await User.findOne({email})
+        const user = await User.findOne({'local.email': email})
         if(!user){
             response.msg = 'No existe el usuario'
             res.status(401).json(response) 
             next()
         }
         else{
-            if(!bcrypt.compare(user.password, password)){
+            if(!bcrypt.compare(user.local.password, password)){
                 response.msg = 'Contraseña incorrecta'
                 res.status(401).json(response)
                 next()
@@ -124,4 +125,29 @@ exports.signin = async (req,res,next) => {
         console.error(error)
         next()
     }
+}
+
+exports.loginStrategy = async (req,res,next)=>{
+    
+    logRequest(req)
+    
+    let response = {
+        errors: [],
+        msg: '',
+        data: {},
+    }
+    
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        response.errors = errors.array()
+        response.msg = 'La petición no fue exitosa'
+        res.status(400).json(response) 
+        next()
+    }
+
+    const sendToken = await generateToken(req.user)
+    response.data = sendToken
+    res.status(200).json(response)
+    next()
 }

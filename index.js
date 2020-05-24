@@ -2,14 +2,16 @@
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import express from 'express';
+import passport from 'passport'
+import SetupPassport from './src/modules/middleware/Passport'
 import {logger} from './src/modules/logger/logger';
 import corsMiddleware from "./src/modules/middleware/corsMiddleware";
 import securityRoutes from './src/modules/security/routes'
 import customizationRoutes from './src/modules/customization/routes'
 const app = express();
-mongoose.set('useCreateIndex', true);
 dotenv.config();
 const port = process.env.PORT_BACKEND || 8000
+const db = process.env.MONGO_URI || 'mongodb://localhost/tienda'
 
 //Swagger
 import swaggerUi from 'swagger-ui-express';
@@ -29,17 +31,20 @@ app.use(corsMiddleware);
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
+//Passport
+app.use(passport.initialize())
+
 //Routes
 app.use('/', securityRoutes);
 app.use('/', customizationRoutes);
 
-//Se conecta con MongoDB
-
-//Connecting database first
-mongoose.connect('mongodb://localhost/tienda', { useNewUrlParser: true, useUnifiedTopology: true, socketTimeoutMS: 10000, useFindAndModify: false, useCreateIndex: true })
-    .then(() => logger.info('Conectado correctamente a MongoDB'))
-    .catch(() => logger.info('Error al conectarse a MongoDB'))
-
 //Then initializate server
-app.listen(port, () => logger.info('Escuchando puerto: ' + port));
-
+app.listen(port, async () => {
+    
+    //Connecting database first
+    await mongoose.connect( db , { useNewUrlParser: true, useUnifiedTopology: true, socketTimeoutMS: 10000, useFindAndModify: false, useCreateIndex: true })
+        .then(() => logger.info('Conectado correctamente a MongoDB'))
+        .catch(() => logger.info('Error al conectarse a MongoDB'))
+    
+    logger.info('Escuchando puerto: ' + port)
+});
