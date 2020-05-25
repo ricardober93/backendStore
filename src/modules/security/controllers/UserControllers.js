@@ -74,6 +74,7 @@ exports.signup = async (req,res,next) => {
 
 //Login
 exports.signin = async (req,res,next) => {
+    console.log(req.body)
 
     logRequest(req)
     
@@ -108,7 +109,8 @@ exports.signin = async (req,res,next) => {
             next()
         }
         else{
-            if(!bcrypt.compare(user.local.password, password)){
+            if(!bcrypt.compare(password,user.local.password))
+            {
                 response.msg = 'Contraseña incorrecta'
                 res.status(401).json(response)
                 next()
