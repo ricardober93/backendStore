@@ -30,7 +30,7 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Autentica al usuario y genera el Token",
+                "summary": "Registra al usuario y genera el Token",
                 "description": "",
                 "consumes": [
                     "application/x-www-form-urlencoded"
@@ -39,9 +39,23 @@
                     "application/json"
                 ],
                 "parameters": [{
-                        "name": "username",
+                        "name": "name",
                         "in": "formData",
-                        "description": "Nombre de usuario",
+                        "description": "Nombre",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "lastname",
+                        "in": "formData",
+                        "description": "Apellido",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "email",
+                        "in": "formData",
+                        "description": "Correo electronico",
                         "required": true,
                         "type": "string"
                     },
@@ -62,6 +76,62 @@
                     },
                     "500": {
                         "description": "Error de servidor"
+                    }
+                }
+            }
+        },
+        "/signin": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Loguea al usuario y genera el Token",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "formData",
+                        "description": "Correo electronico",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "formData",
+                        "description": "Contraseña",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Se logueo con exito, retorna el token"
+                    },
+                    "400": {
+                        "description": "La petición no fue exitosa o Los parametros son inconsistentes"
+                    },
+                    "500": {
+                        "description": "Error de servidor"
+                    }
+                }
+            }
+        },
+        "/auth/google": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Loguea al usuario con Google y genera el Token",
+                "description": "",
+                "responses": {
+                    "200": {
+                        "description": "Retorna el token"
                     }
                 }
             }
