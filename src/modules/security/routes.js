@@ -7,8 +7,13 @@ import Auth from './services/authUser'
     //Users
         //Signup
     router.post('/signup', User.signup)
+        //Verify user
+    router.post('/auth/verify', User.verify)
         //Signin
     router.post('/signin', User.signin)
+        //Change password
+    router.post('/reset-password/:email',User.resetPassword)
+    router.post('/reset-password/:userid/:token',User.changePassword)
 
         //Login Google
     router.get('/auth/google',Auth.googleScope)

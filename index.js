@@ -28,7 +28,7 @@ app.use(function (err, req, res, next) {
 app.use(corsMiddleware);
 
 //Body Parse
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 
 //Passport
@@ -42,7 +42,7 @@ app.use('/', customizationRoutes);
 app.listen(port, async () => {
     
     //Connecting database first
-    await mongoose.connect( db , { useNewUrlParser: true, useUnifiedTopology: true, socketTimeoutMS: 10000, useFindAndModify: false, useCreateIndex: true })
+    await mongoose.connect( db , { useNewUrlParser: true, useUnifiedTopology: true, socketTimeoutMS: 10000, useFindAndModify: false, useCreateIndex: false })
         .then(() => logger.info('Conectado correctamente a MongoDB'))
         .catch(() => logger.info('Error al conectarse a MongoDB'))
     
