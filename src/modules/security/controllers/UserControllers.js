@@ -40,6 +40,16 @@ exports.signup = async (req,res,next) => {
         return; 
     }
 
+    //Validate email unique
+    let emailUnique = await User.findOne({'local.email' : email});
+
+    if(emailUnique){
+        response.errors = true
+        response.msg = 'El email que ingresaste ya está registrado'
+        res.status(400).json(response)
+        return; 
+    }
+
     const username = `${req.body.name}${shortid.generate()}`
 
     const user = await registerService(username, name, lastname, email, password, role)
