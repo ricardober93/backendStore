@@ -2,12 +2,11 @@ import User from '../models/UserModel'
 import Role from '../models/RoleModel'
 import bcrypt from 'bcrypt'
 import shortid from 'shortid'
-import randomString from 'crypto-random-string'
 import jwt from 'jsonwebtoken'
 import { logRequest } from '../../logger/logger';
 import { validationResult } from "express-validator";
-import {generateToken,passwordOldToken} from '../services/authUser'
-
+import { generateToken, passwordOldToken }  from '../services/authUser'
+import { registerService }  from '../services/RegisterService'
 import mail from '../../middleware/nodemailer'
 import templates from '../utils/templatesMail'
 
@@ -16,7 +15,7 @@ exports.signup = async (req,res,next) => {
     
     logRequest(req)
 
-    const { lastname, email, name, password } = req.body;
+    const { lastname, email, name, password, role } = req.body;
 
     let response = {
         errors: [],
@@ -43,34 +42,10 @@ exports.signup = async (req,res,next) => {
 
     const username = `${req.body.name}${shortid.generate()}`
 
-    const user = new User({
-        username,
-        name,
-        lastname
-    })
-    user.method = 'local'
-    user.local.email = email
-    user.local.password = password
-
-    user.local.password = await bcrypt.hash( req.body.password, 12)
-
-    if(req.body.role){
-        const {role} = req.body
-        const rolesAndPermissions = await Role.findOne({name: role.name})
-        user.role = rolesAndPermissions
-    } else{
-        const defaultRole = await Role.findOne({'name':'user'})
-        user.role = defaultRole
-    }
-
-    //Generate token active account
-    const tokenState = randomString({length:8,type:'numeric'})
-    user.tokenState = tokenState
+    const user = await registerService(username, name, lastname, email, password, role)
 
     try {
-        await user.save()
-        
-        const html = templates.verifyUser(tokenState,user.name,'http://localhost:8000')
+        const html = templates.verifyUser(user.tokenState, user.name, 'http://localhost:8000')
 
         await mail.sendMail('noreply@test.com',user.local.email,'Verify User',html)
 
@@ -81,7 +56,7 @@ exports.signup = async (req,res,next) => {
         response.errors = true
         response.msg = error
         res.status(500).json(response)
-        console.log(error)
+        console.error(error)
         next(error)
     }
 }
@@ -136,9 +111,7 @@ exports.signin = async (req,res,next) => {
     logRequest(req)
     
     const { password, email } = req.body;
-    console.log(req)
-    console.log(req.body)
-
+    
     let response = {
         errors: [],
         msg: '',

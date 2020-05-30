@@ -8,8 +8,8 @@ module.exports.readCustomizationAction = async function (req, res) {
 
     let response = {
         errors: [],
-        message: [''],
-        data: [],
+        message: '',
+        data: {},
     }
 
     const errors = validationResult(req);
@@ -35,8 +35,8 @@ module.exports.updateColorsAction = async function (req, res) {
 
     let response = {
         errors: [],
-        message: [''],
-        data: [],
+        message: '',
+        data: {},
     }
 
     const errors = validationResult(req);
@@ -80,8 +80,8 @@ module.exports.updateLanguageAction = async function (req, res) {
 
     let response = {
         errors: [],
-        message: [''],
-        data: [],
+        message: '',
+        data: {},
     }
 
     const errors = validationResult(req);
@@ -127,8 +127,8 @@ module.exports.changeLogoPreviewAction = async function (req, res) {
 
     let response = {
         errors: [],
-        message: [''],
-        data: '',
+        message: '',
+        data: {},
     }
     const errors = validationResult(req);
 
@@ -165,8 +165,8 @@ module.exports.updateLogoAction = async function (req, res) {
 
     let response = {
         errors: [],
-        message: [''],
-        data: '',
+        message: '',
+        data: {},
     }
 
     const errors = validationResult(req);

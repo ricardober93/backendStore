@@ -2,7 +2,6 @@ import jwt from 'jsonwebtoken'
 import Role from '../models/RoleModel'
 import passport from 'passport'
 
-
 exports.generateToken = async (user) => {
     const {role} = user
     

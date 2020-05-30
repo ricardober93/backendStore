@@ -6,7 +6,7 @@
         "title": "API Documentada"
     },
     "host": "localhost:8000",
-    "basePath": "/api",
+    "basePath": "",
     "tags": [{
             "name": "Auth",
             "description": "Autenticacion del usuario"
@@ -93,8 +93,7 @@
                 "produces": [
                     "application/json"
                 ],
-                "parameters": [
-                    {
+                "parameters": [{
                         "name": "email",
                         "in": "formData",
                         "description": "Correo electronico",

@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import express from 'express';
 import passport from 'passport'
-import SetupPassport from './src/modules/middleware/Passport'
+//import SetupPassport from './src/modules/middleware/Passport'
 import {logger} from './src/modules/logger/logger';
 import corsMiddleware from "./src/modules/middleware/corsMiddleware";
 import securityRoutes from './src/modules/security/routes'
