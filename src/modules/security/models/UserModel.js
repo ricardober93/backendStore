@@ -31,7 +31,6 @@ const UserModel = new Schema({
     email: {
       type: String,
       trim: true,
-      unique: true,
       lowerCase: true
     },
     id: {
@@ -42,7 +41,6 @@ const UserModel = new Schema({
     email: {
       type: String,
       trim: true,
-      unique: true,
       lowerCase: true
     },
     id: {
@@ -61,6 +59,7 @@ const UserModel = new Schema({
     type: String,
     // default: 'assets/avatar/user.png'
   },
+  tokenState:String,
   state: {
     type: Boolean,
     default: false
