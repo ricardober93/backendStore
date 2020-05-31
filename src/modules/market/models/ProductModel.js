@@ -35,9 +35,8 @@ const productSchema = new mongoose.Schema({
         required: true,
     },
     state: {  
+        type: String,  
         required: true,
-        type: Schema.ObjectId,
-        ref: 'state'
     },
     category: {  
         required: true,
