@@ -8,14 +8,16 @@ const categorySchema = new mongoose.Schema({
     description: { 
         type: String,
     },
+    image_url: { 
+        type: String,
+    },
     featured: { 
         type: Boolean,  
         required: true,
     },
     state: {  
+        type: String,  
         required: true,
-        type: Schema.ObjectId,
-        ref: 'state'
     },
 })
 
