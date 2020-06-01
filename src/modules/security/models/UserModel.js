@@ -1,36 +1,65 @@
-import {Schema,model} from "mongoose";
+import {
+  Schema,
+  model
+} from "mongoose";
 import uniqueValidator from "mongoose-unique-validator"
 
 const UserModel = new Schema({
+  method: {
+    type: String,
+    enum: ['local', 'google', 'facebook'],
+    required: true
+  },
   username: {
     type: String,
     required: true,
     trim: true,
     unique: true
   },
-  email: {
-    type: String,
-    required: true,
-    trim: true,
-    unique: true,
-    lowerCase: true
+  local: {
+    email: {
+      type: String,
+      trim: true,
+      unique: true,
+      lowerCase: true
+    },
+    password: {
+      type: String
+    }
+  },
+  google: {
+    email: {
+      type: String,
+      trim: true,
+      lowerCase: true
+    },
+    id: {
+      type: String
+    }
+  },
+  facebook: {
+    email: {
+      type: String,
+      trim: true,
+      lowerCase: true
+    },
+    id: {
+      type: String
+    }
   },
   name: {
     type: String,
     required: true
   },
   lastname: {
-    type:String,
-    required: true
-  },
-  password: {
     type: String,
-    required: true,
+    required: true
   },
   avatar: {
     type: String,
     // default: 'assets/avatar/user.png'
   },
+  tokenState:String,
   state: {
     type: Boolean,
     default: false
