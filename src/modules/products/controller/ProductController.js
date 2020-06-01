@@ -2,19 +2,12 @@ import Product from "../models/ProductModel";
 
 
 // obtener todos los productos
-exports.getProducts = async (res, req, next) => {
+exports.getProducts = async ( req,res, next) => {
   let response = {
     errors: [],
     msg: "",
     data: {},
   };
-
-  if (!errors.IsEmpty()) {
-    response.errors = errors.array();
-    response.msg = "La Peticion no es exitosa";
-    res.status(400).json(response);
-    next();
-  }
 
   try {
     const products = await Product.find();
@@ -24,13 +17,13 @@ exports.getProducts = async (res, req, next) => {
   } catch (error) {
     response.errors = true;
     response.msg = error;
-    res.status(500).json(response);
+    res.status(400).json(response);
     next();
   }
 };
 
 // obtener un solo producto
-exports.getProduct = async (res, req, next) => {
+exports.getProduct = async (req, res, next) => {
   const id = req.params.id;
   let response = {
     errors: [],
@@ -46,13 +39,13 @@ exports.getProduct = async (res, req, next) => {
   } catch (error) {
     response.errors = true;
     response.msg = error;
-    res.status(500).json(response);
+    res.status(400).json(response);
     next();
   }
 };
 
 // crear un solo producto
-exports.create = async (res, req, next) => {
+exports.create = async (req, res, next) => {
   const {
     name,
     description,
@@ -89,7 +82,7 @@ exports.create = async (res, req, next) => {
 };
 
 // Editar un producto
-exports.editProduct = async (res, req, next) => {
+exports.editProduct = async (req, res, next) => {
   const id = req.params.id;
   let response = {
     errors: [],
@@ -108,7 +101,7 @@ exports.editProduct = async (res, req, next) => {
   }
 };
 // Actualizar un producto
-exports.updateproduct = async(res, req, next) => {
+exports.updateproduct = async(req, res, next) => {
     const id = req.params.id;
     const {
         name,
@@ -145,7 +138,7 @@ exports.updateproduct = async(res, req, next) => {
     }
 };
 // Eliminar producto
-exports.deleteProduct = async (res, req, next) =>{
+exports.deleteProduct = async (req, res, next) =>{
     const id = req.params.id;
     try {
         const product = await ProductoModel.findByIdAndRemove(id);
