@@ -55,3 +55,15 @@ UserModel.plugin(uniqueValidator)
 const User = model('user', UserModel)
 
 export default User
+
+
+
+// usuarioEsquema.methods.encriptarContrasenia = async (password) => {
+//   const salt = await bycript.genSalt(10);
+//   return bycript.hash(password, salt);
+// }
+
+// usuarioEsquema.methods.relacionar = async function(password) {
+//   return await bycript.compare(password, this.password)
+// }
+
