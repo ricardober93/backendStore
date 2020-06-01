@@ -69,6 +69,13 @@
                         "description": "Contraseña",
                         "required": true,
                         "type": "string"
+                    },
+                    {
+                        "name": "Role",
+                        "in": "formData",
+                        "description": "Rol",
+                        "required": true,
+                        "type": "string"
                     }
                 ],
                 "responses": {
