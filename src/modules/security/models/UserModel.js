@@ -55,5 +55,3 @@ UserModel.plugin(uniqueValidator)
 const User = model('user', UserModel)
 
 export default User
-
-
