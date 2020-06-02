@@ -1,5 +1,5 @@
 import Product from "../models/ProductModel";
-
+import {CreateProducto} from '../services/ProductService'
 
 // obtener todos los productos
 exports.getProducts = async ( req,res, next) => {
@@ -55,30 +55,27 @@ exports.create = async (req, res, next) => {
     SKU,
     comentaries,
     state,
-    marcaProducto,
+    mark,
     publish,
   } = req.body;
 
-  const NewProduct = new Product({
-    name,
-    description,
-    price,
-    image,
-    raiting,
-    SKU,
-    comentaries,
-    state,
-    marcaProducto,
-    publish,
-  });
+  const product = await CreateProducto(name, description, price,image, raiting, SKU, comentaries,state, mark,    publish)
 
   try {
-    await NewProduct.save();
-    res.json(NewProduct);
+
+    if (product) {
+      response.msg = 'Product created succesfuly'
+      res.status(200).json(response)
+    }
+    
   } catch (error) {
-    res.status(500).json();
-    next();
+    response.errors = true
+    response.msg = error
+    res.status(500).json(response)
+    console.error(error)
+    next(error)
   }
+
 };
 
 // Editar un producto

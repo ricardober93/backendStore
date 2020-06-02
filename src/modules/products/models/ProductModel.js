@@ -9,7 +9,7 @@ const ProductSchema = new mongoose.Schema({
   SKU: { type:String },
   comentaries: { type: Array},
   state: { type:String },
-  marcaProducto: { type:String },
+  mark: { type:String },
   buyers: { type: Array },
   publish: { type: String },
 }, {
