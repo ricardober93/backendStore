@@ -8,6 +8,10 @@ import {logger} from './src/modules/logger/logger';
 import corsMiddleware from "./src/modules/middleware/corsMiddleware";
 import securityRoutes from './src/modules/security/routes'
 import customizationRoutes from './src/modules/customization/routes'
+import productRoutes from './src/modules/products/routes'
+
+
+
 const app = express();
 dotenv.config();
 const port = process.env.PORT_BACKEND || 8000
@@ -37,6 +41,7 @@ app.use(passport.initialize())
 //Routes
 app.use('/', securityRoutes);
 app.use('/', customizationRoutes);
+app.use('/', productRoutes);
 
 //Then initializate server
 app.listen(port, async () => {

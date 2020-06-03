@@ -1,8 +1,8 @@
-import { Router } from 'express'
-const router = Router()
-import User from './controllers/UserControllers'
-import Role from './controllers/RoleController'
-import Auth from './services/authUser'
+import { Router } from "express";
+const router = Router();
+import User from "./controllers/UserControllers";
+import Role from "./controllers/RoleController";
+import Auth from "./services/authUser";
 
     //Users
         //Signup
@@ -29,12 +29,11 @@ import Auth from './services/authUser'
                 User.loginStrategy
     );
 
-    //Dashboard TEST Authentication token
-    router.get('/profile', Auth.validateToken)
+  //Dashboard TEST Authentication token
+  router.get("/profile", Auth.validateToken);
 
-
-    //Roles
-        //Add role
-    router.post('/role', Role.addRole)
+  //Roles
+  //Add role
+  router.post("/role", Role.addRole);
 
 export default router
