@@ -11,10 +11,10 @@ import Product from "./controller/ProductController";
   // crear un producto
   router.post("/product/create", Product.create);
   // editar un producto
-  router.get("/products/edit/:id", Product.editProduct);
+  router.get("/product/edit/:id", Product.edit);
   // Actualizar un producto
-  router.put("/products/edit/:id", Product.updateproduct);
+  router.put("/product/edit/:id", Product.update);
   // Eliminar un producto
-  router.delete("/products/:id", Product.deleteProduct);
+  router.delete("/product/:id", Product.delete);
 
 export default router

@@ -1,5 +1,5 @@
 import Product from "../models/ProductModel";
-import {CreateProducto} from '../services/ProductService'
+import {CreateProducto, updateProduct, deleteProduct} from '../services/ProductService'
 
 // obtener todos los productos
 exports.getProducts = async ( req,res, next) => {
@@ -32,7 +32,7 @@ exports.getProduct = async (req, res, next) => {
   };
 
   try {
-    const product = await Product.findbyid(id);
+    const product = await Product.findById(id);
     response.msg = "get Product";
     response.data = product;
     res.json(response);
@@ -59,14 +59,20 @@ exports.create = async (req, res, next) => {
     publish,
   } = req.body;
 
-  const product = await CreateProducto(name, description, price,image, raiting, SKU, comentaries,state, mark,    publish)
+  let response = {
+    errors: [],
+    msg: "",
+    data: {},
+  };
 
+
+  
   try {
-
-    if (product) {
+    
+      await CreateProducto(name, description, price,image, raiting, SKU, comentaries,state, mark,publish)
       response.msg = 'Product created succesfuly'
       res.status(200).json(response)
-    }
+    
     
   } catch (error) {
     response.errors = true
@@ -79,7 +85,7 @@ exports.create = async (req, res, next) => {
 };
 
 // Editar un producto
-exports.editProduct = async (req, res, next) => {
+exports.edit = async (req, res, next) => {
   const id = req.params.id;
   let response = {
     errors: [],
@@ -98,7 +104,7 @@ exports.editProduct = async (req, res, next) => {
   }
 };
 // Actualizar un producto
-exports.updateproduct = async(req, res, next) => {
+exports.update = async(req, res, next) => {
     const id = req.params.id;
     const {
         name,
@@ -109,37 +115,40 @@ exports.updateproduct = async(req, res, next) => {
         SKU,
         comentaries,
         state,
-        marcaProducto,
+        mark,
         publish,
     }= req.body;
-
-    const updateProduct = {
-        name,
-        description,
-        price,
-        image,
-        raiting,
-        SKU,
-        comentaries,
-        state,
-        marcaProducto,
-        publish,
-    };
-
+    let response = {
+      errors: [],
+      msg: "",
+      data: {},
+    };    
     try {
-        const product = await ProductoModel.findOneAndUpdate(id,  updateProduct );
-        res.json(product);
+      
+        await updateProduct(id, name, description, price,image, raiting, SKU, comentaries,state, mark,    publish)
+        response.msg = 'Product update succesfuly'
+        res.status(200).json(response)
+         
     } catch (error) {
+    response.errors = true;
+    response.msg = error;
     res.status(500).json(error);
     next();
     }
 };
 // Eliminar producto
-exports.deleteProduct = async (req, res, next) =>{
+exports.delete = async (req, res, next) =>{
     const id = req.params.id;
+    let response = {
+      errors: [],
+      msg: "",
+      data: {},
+    };
+  
     try {
-        const product = await ProductoModel.findByIdAndRemove(id);
-        res.json(product);
+        await deleteProduct(id);
+        response.msg = 'Product deleted succesfuly'
+        res.status(200).json(response)
     } catch (error) {
     res.status(500).json(error);
     next();
