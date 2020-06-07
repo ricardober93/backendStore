@@ -12,6 +12,13 @@ import {
     getCartAction,
     updateCartAction
 } from './controllers/CartController'
+import {
+    getProductsAction, 
+    getProductAction,
+    createProductAction,
+    editProductAction,
+    deleteProductAction
+} from "./controller/ProductController";
 
 const router = express.Router();
 
@@ -23,7 +30,7 @@ router.post('/category/add', addCategoryAction);
 //Encontrar una categoria
 router.get('/category/:id', getCategoryAction);
 //Actualizar una categoria
-router.put('/category/update/:id', updateCategoryAction);
+router.put('/category/:id', updateCategoryAction);
 
 //CART
 //Retorna todas los carritos
@@ -33,8 +40,18 @@ router.post('/cart/add', addCartAction);
 //Encontrar un carrito
 router.get('/cart/:id', getCartAction);
 //Actualizar un carrito
-router.put('/cart/update/:id', updateCartAction);
+router.put('/cart/:id', updateCartAction);
 
-
+//PRODUCT
+//Retorna todas los productos
+router.get('/products/all', getProductsAction);
+//Retorna un producto por id
+router.get('/product/:id', getProductAction);
+//Agregar un producto
+router.post('/product/add', createProductAction);
+//Actualizar un producto
+router.put('/product/:id', editProductAction);
+//Eliminar un carrito
+router.delete('/product/:id', deleteProductAction);
 
 export default router;
