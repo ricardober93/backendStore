@@ -1,6 +1,9 @@
-const mongoose = require('mongoose');
+import {
+    Schema,
+    model
+  } from "mongoose";
 
-const cartDetailSchema = new mongoose.Schema({
+const cartDetailSchema = new Schema({
     discount: { 
         type: Number, 
     },
@@ -24,6 +27,6 @@ const cartDetailSchema = new mongoose.Schema({
     },
 })
 
-const CartDetail = mongoose.model('cart_detail', cartDetailSchema);
+const CartDetail = model('cart_detail', cartDetailSchema);
 
 module.exports = CartDetail;

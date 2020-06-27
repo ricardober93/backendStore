@@ -1,9 +1,10 @@
 import Product from "../models/ProductModel";
+import Brand from "../models/BrandModel";
 import { logRequest } from '../../logger/logger';
 import { createProduct, updateProduct, deleteProduct } from '../services/ProductService'
 
 // obtener todos los productos
-exports.getProductsAction = async ( req,res, next) => {
+exports.getProductsAction = async ( req, res, next) => {
 
   logRequest(req)
 
@@ -14,7 +15,7 @@ exports.getProductsAction = async ( req,res, next) => {
   };
 
   try {
-    const products = await Product.find().populate('brand').populate('category').populate('image');
+    const products = await Product.find().populate('brand').populate('category');
     response.msg = "La petición exitosa";
     response.data = products;
     res.status(200).json(response);
@@ -37,9 +38,9 @@ exports.getProductAction = async (req, res, next) => {
     msg: "",
     data: {},
   };
-
+  
   try {
-    const product = await Product.findById(id).populate('brand').populate('category').populate('image');
+    const product = await Product.findById(id).populate('brand').populate('category');
     response.msg = "get Product";
     response.data = product;
     res.status(200).json(response);

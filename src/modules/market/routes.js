@@ -18,7 +18,7 @@ import {
     createProductAction,
     editProductAction,
     deleteProductAction
-} from "./controller/ProductController";
+} from "./controllers/ProductController";
 
 const router = express.Router();
 
