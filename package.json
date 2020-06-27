@@ -6,7 +6,8 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "./node_modules/.bin/nodemon ./index.js --exec babel-node -e js",
-        "init-db": "nodemon ./init-db.js --exec babel-node -e js"
+        "init-db": "nodemon ./init-db.js --exec babel-node -e js",
+        "init-market": "nodemon ./init-market.js --exec babel-node -e js"
     },
     "keywords": [],
     "author": "",

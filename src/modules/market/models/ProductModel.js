@@ -1,22 +1,21 @@
-const mongoose = require('mongoose');
-
-const ProductSchema = new mongoose.Schema(
+import {
+    Schema,
+    model
+  } from "mongoose";
+const ProductSchema = new Schema(
     {
         name: { type: String, required: true },
         description: { type: String, required: true },
         price: { type: Number, required: true },
         image_preview: { type: String, default: '.' },
-        image: { 
-            type: Schema.ObjectId,
-            ref: 'image'
-        },
+        image: { type: Array },
         raiting: { type: Number },
         SKU: { type: String, required: true },
         stock: { type: Number, required: true },
         state: { type: String,  required: true },
         brand: { 
             type: Schema.ObjectId,
-            ref: 'brand' 
+            ref: 'brand'
         },
         category: { 
             type: Schema.ObjectId,
@@ -29,6 +28,6 @@ const ProductSchema = new mongoose.Schema(
     }
 );
 
-const Product = mongoose.model('product', ProductSchema);
+const Product = model('product', ProductSchema);
 
 module.exports = Product;
