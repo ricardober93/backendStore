@@ -4,6 +4,10 @@ import {
   } from "mongoose";
 
 const cartSchema = new Schema({
+    products: { 
+        type: Array, 
+        required: true,
+    },
     total_discount: { 
         type: Number, 
     },
@@ -23,7 +27,6 @@ const cartSchema = new Schema({
         required: true,
     },
     user: {  
-        required: true,
         type: Schema.ObjectId,
         ref: 'user'
     },

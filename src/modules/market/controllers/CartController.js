@@ -47,7 +47,7 @@ module.exports.addCartAction = async function (req, res) {
 
     logRequest(req)
 
-    const { total_discount, total_price, state, user_id } = req.body;
+    const { products, total, total_discount, user_id } = req.body;
 
     let response = {
         errors: [],
@@ -63,7 +63,7 @@ module.exports.addCartAction = async function (req, res) {
         res.status(400).json(response) 
     }
     
-    const cart = await addCart(total_discount, total_price, state, user_id);
+    const cart = await addCart(products, total, total_discount, user_id);
     const result = await cart.save();
 
     response.data = result

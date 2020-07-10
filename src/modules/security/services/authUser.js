@@ -10,6 +10,10 @@ exports.generateToken = async (user) => {
 
     const token = jwt.sign({
             id: user.id,
+            username: user.username,
+            name: user.name,
+            lastname: user.lastname,
+            avatar: user.avatar,
             role: viewRole.name
         }, 'REEMPLACEN',{
             expiresIn: exp 

@@ -11,15 +11,17 @@ export async function readCarts () {
 
 }
 
-export async function addCart (total_discount,total_price,state,user_id) {
+export async function addCart (products, total, total_discount = 0, user_id) {
 
     let user = User.findById(user_id)
+
     const cart = new Cart({
+        products: products,
+        total_price: total,
         total_discount: total_discount,
-        total_price: total_price,
         order_date: Date.now(),
-        state: state,
-        user: user,
+        state: 'available',
+        user: user ? user : null,
     });
     
     cart.id = cart._id;
