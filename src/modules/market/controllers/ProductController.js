@@ -4,7 +4,7 @@ import { logRequest } from '../../logger/logger';
 import { createProduct, updateProduct, deleteProduct } from '../services/ProductService'
 
 // obtener todos los productos
-exports.getProductsAction = async ( req, res, next) => {
+exports.getProductsAction = async (req, res, next) => {
 
   logRequest(req)
 
@@ -57,12 +57,15 @@ exports.createProductAction = async (req, res, next) => {
 
   logRequest(req)
 
+  console.log(req.body)
+
   const {
     name,
     description,
     price,
     image_preview,
     image,
+    featured,
     raiting,
     SKU,
     stock,
@@ -80,7 +83,7 @@ exports.createProductAction = async (req, res, next) => {
 
   try {
 
-      let product = await createProduct(name, description, price, image_preview, image, raiting, SKU, stock, brand, category, state, publish)
+      let product = await createProduct(name, description, price, featured, image_preview, image, raiting, SKU, stock, brand, category, state, publish)
       response.msg = 'Product created succesfuly'
       response.data = product
       res.status(200).json(response)

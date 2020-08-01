@@ -12,7 +12,8 @@ const ProductSchema = new Schema(
         image: { type: Array },
         raiting: { type: Number },
         SKU: { type: String, required: true },
-        stock: { type: Number, required: true },
+        stock: { type: Number },
+        featured: { type: Boolean },
         state: { type: String,  required: true },
         brand: { 
             type: Schema.ObjectId,

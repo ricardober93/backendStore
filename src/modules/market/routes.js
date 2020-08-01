@@ -48,7 +48,7 @@ router.get('/products/all', getProductsAction);
 //Retorna un producto por id
 router.get('/product/:id', getProductAction);
 //Agregar un producto
-router.post('/product/add', createProductAction);
+router.post('/product', createProductAction);
 //Actualizar un producto
 router.put('/product/:id', editProductAction);
 //Eliminar un carrito
