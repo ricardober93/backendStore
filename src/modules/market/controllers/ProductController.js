@@ -57,8 +57,6 @@ exports.createProductAction = async (req, res, next) => {
 
   logRequest(req)
 
-  console.log(req.body)
-
   const {
     name,
     description,
@@ -69,8 +67,8 @@ exports.createProductAction = async (req, res, next) => {
     raiting,
     SKU,
     stock,
-    brand,
-    category,
+    brand_id,
+    category_id,
     state,
     publish,
   } = req.body;
@@ -83,7 +81,7 @@ exports.createProductAction = async (req, res, next) => {
 
   try {
 
-      let product = await createProduct(name, description, price, featured, image_preview, image, raiting, SKU, stock, brand, category, state, publish)
+      let product = await createProduct(name, description, price, featured, image_preview, image, raiting, SKU, stock, brand_id, category_id, state, publish)
       response.msg = 'Product created succesfuly'
       response.data = product
       res.status(200).json(response)
@@ -109,13 +107,14 @@ exports.editProductAction = async (req, res, next) => {
     name,
     description,
     price,
+    featured,
     image_preview,
     image,
     raiting,
-    SKU,
+    sku,
     stock,
-    brand,
-    category,
+    brand_id,
+    category_id,
     state,
     publish,
   } = req.body;
@@ -127,12 +126,14 @@ exports.editProductAction = async (req, res, next) => {
   };
 
   try {
-    let editProduct = await updateProduct(id, name, description, price, image_preview, image, raiting, SKU, stock, brand, category, state, publish)
+    let editProduct = await updateProduct(id, name, description, price, featured, image_preview, image, raiting, sku, stock, brand_id, category_id, state, publish)
+
     response.msg = 'Product update succesfuly'
     response.data = editProduct
     res.status(200).json(response)
   } catch (error) {
-    response.errors = true;
+    console.log(error)
+    response.errors = error;
     response.msg = error;
     res.status(500).json(response);
     next();

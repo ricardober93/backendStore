@@ -1,20 +1,25 @@
 import Product from "../models/ProductModel";
+import Brand from "../models/BrandModel";
+import Category from "../models/CategoryModel";
 
 exports.createProduct = async (
   name,
   description,
-  price = 33,
+  price,
   featured,
   image_preview,
   image = [],
   raiting = 5,
-  SKU = 272883990,
+  SKU,
   stock = 1, 
-  brand = null, 
-  category = null,
+  brand_id, 
+  category_id,
   state = 'disponible',
   publish = true
 ) => {
+
+  const brand = await Brand.findById(brand_id)
+  const category = await Category.findById(category_id)
 
   const NewProduct = new Product({
     name,
@@ -44,17 +49,21 @@ exports.updateProduct = async (
   price,
   featured,
   image_preview,
-  image,
-  raiting,
+  image = [],
+  raiting = 5,
   SKU,
-  stock, 
-  brand, 
-  category,
-  state,
-  publish
+  stock = 1, 
+  brand_id, 
+  category_id,
+  state = 'disponible',
+  publish = true
 ) => {
 
-  const updateProduct = {
+
+  const brand = await Brand.findById(brand_id)
+  const category = await Category.findById(category_id)
+
+  const result = await Product.findByIdAndUpdate(id, {
     name,
     description,
     price,
@@ -68,9 +77,7 @@ exports.updateProduct = async (
     category,
     state,
     publish
-  };
-
-  const result = await Product.findOneAndUpdate(id, updateProduct );
+  });
 
   return result;
 

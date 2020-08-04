@@ -1,13 +1,13 @@
 import { logRequest } from '../../logger/logger';
 import {   
-    readCategories,
-    addCategory,
-    getCategory,
-    updateCategory
-} from '../services/CategoryService';
+    readBrands,
+    addBrand,
+    getBrand,
+    updateBrand
+} from '../services/BrandService';
 import { validationResult } from "express-validator";
 
-module.exports.readCategoriesAction = async function (req, res) {
+module.exports.readBrandsAction = async function (req, res) {
 
     logRequest(req)
 
@@ -30,7 +30,7 @@ module.exports.readCategoriesAction = async function (req, res) {
         return res.status(401).json(response)
     } */
 
-    const categories = await readCategories();
+    const categories = await readBrands();
     
     if (categories) {
         response.data = categories
@@ -41,7 +41,7 @@ module.exports.readCategoriesAction = async function (req, res) {
     }
 }
 
-module.exports.addCategoryAction = async function (req, res) {
+module.exports.addBrandAction = async function (req, res) {
 
     logRequest(req)
 
@@ -61,7 +61,7 @@ module.exports.addCategoryAction = async function (req, res) {
         res.status(400).json(response) 
     }
     
-    const category = await addCategory(name, description, image_url, featured, state);
+    const category = await addBrand(name, description, image_url, featured, state);
     const result = await category.save();
 
     response.data = result
@@ -69,7 +69,7 @@ module.exports.addCategoryAction = async function (req, res) {
 
 }
 
-module.exports.getCategoryAction = async function (req, res) {
+module.exports.getBrandAction = async function (req, res) {
 
     logRequest(req)
 
@@ -79,7 +79,7 @@ module.exports.getCategoryAction = async function (req, res) {
         data: {},
     }
 
-    const category = await getCategory(req.params.id);
+    const category = await getBrand(req.params.id);
 
     if (!category){
         response.msg = 'No hemos encontrado un usuario con ese ID'
@@ -91,7 +91,7 @@ module.exports.getCategoryAction = async function (req, res) {
 
 }
 
-module.exports.updateCategoryAction = async function (req, res) {
+module.exports.updateBrandAction = async function (req, res) {
 
     logRequest(req)
     
@@ -112,7 +112,7 @@ module.exports.updateCategoryAction = async function (req, res) {
     }
 
     try{
-        const categoryUpdate = await updateCategory(req.params.id, name, description, image_url, featured, state);
+        const categoryUpdate = await updateBrand(req.params.id, name, description, image_url, featured, state);
         response.data = categoryUpdate
         res.status(200).json(response)
     }

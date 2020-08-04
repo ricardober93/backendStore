@@ -7,6 +7,12 @@ import {
     updateCategoryAction
 } from './controllers/CategoryController'
 import {
+    readBrandsAction, 
+    addBrandAction,
+    getBrandAction,
+    updateBrandAction
+} from './controllers/BrandController'
+import {
     readCartsAction, 
     addCartAction,
     getCartAction,
@@ -24,13 +30,23 @@ const router = express.Router();
 
 //CATEGORY
 //Retorna todas las categorias
-router.get('/categories/all', readCategoriesAction);
+router.get('/api/categories', readCategoriesAction);
 //Agregar una categoria
-router.post('/category/add', addCategoryAction);
+router.post('/api/category', addCategoryAction);
 //Encontrar una categoria
-router.get('/category/:id', getCategoryAction);
+router.get('/api/category/:id', getCategoryAction);
 //Actualizar una categoria
-router.put('/category/:id', updateCategoryAction);
+router.put('/api/category/:id', updateCategoryAction);
+
+//BRANDS
+//Retorna todas las marcas
+router.get('/api/brands', readBrandsAction);
+//Agregar una marca
+router.post('/api/brand', addBrandAction);
+//Encontrar una marca
+router.get('/api/brand/:id', getBrandAction);
+//Actualizar una marca
+router.put('/api/brand/:id', updateBrandAction);
 
 //CART
 //Retorna todas los carritos
@@ -44,14 +60,14 @@ router.put('/cart/:id', updateCartAction);
 
 //PRODUCT
 //Retorna todas los productos
-router.get('/products/all', getProductsAction);
+router.get('/api/products', getProductsAction);
 //Retorna un producto por id
-router.get('/product/:id', getProductAction);
+router.get('/api/product/:id', getProductAction);
 //Agregar un producto
-router.post('/product', createProductAction);
+router.post('/api/product', createProductAction);
 //Actualizar un producto
-router.put('/product/:id', editProductAction);
+router.put('/api/product/:id', editProductAction);
 //Eliminar un carrito
-router.delete('/product/:id', deleteProductAction);
+router.delete('/api/product/:id', deleteProductAction);
 
 export default router;
