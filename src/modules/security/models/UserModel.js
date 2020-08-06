@@ -5,47 +5,32 @@ import {
 import uniqueValidator from "mongoose-unique-validator"
 
 const UserModel = new Schema({
-  method: {
-    type: String,
-    enum: ['local', 'google', 'facebook'],
-    required: true
-  },
   username: {
     type: String,
     required: true,
     trim: true,
     unique: true
   },
-  local: {
-    email: {
-      type: String,
-      trim: true,
-      unique: true,
-      lowerCase: true
-    },
-    password: {
-      type: String
-    }
+  email: {
+    type: String,
+    trim: true,
+    unique: true,
+    lowerCase: true
   },
-  google: {
-    email: {
-      type: String,
-      trim: true,
-      lowerCase: true
-    },
-    id: {
-      type: String
-    }
+  password: {
+    type: String
   },
-  facebook: {
-    email: {
-      type: String,
-      trim: true,
-      lowerCase: true
-    },
-    id: {
-      type: String
-    }
+  google_id: {
+    type: String,
+    trim: true,
+    unique: true,
+    lowerCase: true
+  },
+  facebook_id: {
+    type: String,
+    trim: true,
+    unique: true,
+    lowerCase: true
   },
   name: {
     type: String,

@@ -16,6 +16,7 @@ import {
     readCartsAction, 
     addCartAction,
     getCartAction,
+    getCartByUserAction,
     updateCartAction
 } from './controllers/CartController'
 import {
@@ -50,9 +51,11 @@ router.put('/api/brand/:id', updateBrandAction);
 
 //CART
 //Retorna todas los carritos
-router.get('/carts/all', readCartsAction);
+router.get('/carts', readCartsAction);
 //Agregar un carrito
 router.post('/cart/add', addCartAction);
+//Encontrar un carrito por usuario
+router.get('/carts/user', getCartByUserAction);
 //Encontrar un carrito
 router.get('/cart/:id', getCartAction);
 //Actualizar un carrito

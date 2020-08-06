@@ -3,6 +3,7 @@ import {
     readCarts,
     addCart,
     getCart,
+    getCartByUser,
     updateCart
 } from '../services/CartService';
 import { validationResult } from "express-validator";
@@ -11,23 +12,13 @@ module.exports.readCartsAction = async function (req, res) {
 
     logRequest(req)
 
-    const { id } = req.user;
-
     let response = {
         errors: [],
         msg: '',
         data: {},
     }
     
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-        response.errors = errors.array()
-        response.msg = 'La petición no fue exitosa'
-        res.status(400).json(response) 
-    }
-
-    if (!req.user || !req.rbac.isAllowed(id, "LIST_ROLES_PERMISSION")) {
+    if (!req.user) {
         response.msg = 'No autorizado'
         return res.status(401).json(response)
     }
@@ -54,20 +45,17 @@ module.exports.addCartAction = async function (req, res) {
         msg: '',
         data: {},
     }
-    
-    const errors = validationResult(req);
 
-    if (!errors.isEmpty()) {
-        response.errors = errors.array()
-        response.msg = 'La petición no fue exitosa'
-        res.status(400).json(response) 
-    }
-    
     const cart = await addCart(products, total, total_discount, user_id);
     const result = await cart.save();
 
-    response.data = result
-    res.status(201).json(response)
+    try {
+        response.data = result
+        res.status(201).json(response)
+    } catch (error) {
+        response.msg = 'Error de servidor'
+        res.status(500).json(response)
+    }
 
 }
 
@@ -82,6 +70,30 @@ module.exports.getCartAction = async function (req, res) {
     }
 
     const cart = await getCart(req.params.id);
+
+    if (!cart){
+        response.msg = 'No hemos encontrado un carrito con ese ID'
+        return res.status(404).json(response);
+    }
+
+    response.data = cart
+    res.json(response)
+
+}
+
+module.exports.getCartByUserAction = async function (req, res) {
+
+    logRequest(req)
+    
+    const { id } = req.user;
+
+    let response = {
+        errors: [],
+        msg: '',
+        data: {},
+    }
+
+    const cart = await getCartByUser(id);
 
     if (!cart){
         response.msg = 'No hemos encontrado un carrito con ese ID'

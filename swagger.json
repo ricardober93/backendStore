@@ -6,7 +6,7 @@
         "title": "API Documentada"
     },
     "host": "localhost:8000",
-    "basePath": "",
+    "basePath": "/api",
     "tags": [{
             "name": "Auth",
             "description": "Autenticacion del usuario"
@@ -91,7 +91,7 @@
                 }
             }
         },
-        "/signin": {
+        "/auth": {
             "post": {
                 "tags": [
                     "Auth"
@@ -132,16 +132,43 @@
                 }
             }
         },
-        "/auth/google": {
-            "get": {
+        "/auth-method": {
+            "post": {
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Loguea al usuario con Google y genera el Token",
+                "summary": "Loguea al usuario y genera el Token",
                 "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [{
+                        "name": "token",
+                        "in": "formData",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "method",
+                        "in": "formData",
+                        "description": "Metodo de autenticacion",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "Retorna el token"
+                        "description": "Se logueo con exito, retorna el token"
+                    },
+                    "400": {
+                        "description": "La petición no fue exitosa o Los parametros son inconsistentes"
+                    },
+                    "500": {
+                        "description": "Error de servidor"
                     }
                 }
             }
@@ -442,7 +469,7 @@
                 }]
             }
         },
-        "/carts/all": {
+        "/carts": {
             "get": {
                 "tags": [
                     "Market"
@@ -530,10 +557,36 @@
                 }
             }
         },
+        "/carts/user": {
+            "get": {
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Devuelve los carritos del usuario autenticado",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Se encontro el carrito con exito"
+                    },
+                    "404": {
+                        "description": "No hemos encontrado un carrito con ese ID"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:user",
+                        "read:user"
+                    ]
+                }]
+            }
+        },
         "/cart/{id}": {
             "get": {
                 "tags": [
-                    "Users"
+                    "Market"
                 ],
                 "summary": "Devuelve un carrito por ID",
                 "produces": [

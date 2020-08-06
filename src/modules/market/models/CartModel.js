@@ -4,10 +4,6 @@ import {
   } from "mongoose";
 
 const cartSchema = new Schema({
-    products: { 
-        type: Array, 
-        required: true,
-    },
     total_discount: { 
         type: Number, 
     },
@@ -18,6 +14,10 @@ const cartSchema = new Schema({
     order_date: { 
         type: String,  
         required: true,
+    },
+    products: { 
+        type: Array,  
+        required: true
     },
     arrived_date: { 
         type: String,

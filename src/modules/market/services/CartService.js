@@ -3,17 +3,15 @@ import User from "../../security/models/UserModel";
 
 export async function readCarts () {
 
-    let carts = Cart.find()
-    if(!carts){
-        throw new Error('Ocurrio un error al obtener los datos de los carritos')
-    }
+    let carts = await Cart.find().populate('user')
+    
     return carts
 
 }
 
 export async function addCart (products, total, total_discount = 0, user_id) {
 
-    let user = User.findById(user_id)
+    let user = await User.findById(user_id)
 
     const cart = new Cart({
         products: products,
@@ -26,12 +24,24 @@ export async function addCart (products, total, total_discount = 0, user_id) {
     
     cart.id = cart._id;
     await cart.save()
+
     return cart;
 }
 
 export async function getCart (id) {
     
-    const cart = await Cart.findById(id)
+    const cart = await Cart.findById(id).populate('user')
+
+    if(!cart){
+        throw new Error('El carrito con ese ID no existe')
+    }  
+
+    return cart;
+}
+
+export async function getCartByUser (user_id) {
+    
+    const cart = await Cart.find({ user: user_id })
 
     if(!cart){
         throw new Error('El carrito con ese ID no existe')
@@ -42,7 +52,7 @@ export async function getCart (id) {
 
 export async function updateCart (id,total_discount,total_price,state,user_id)  {
 
-    let user = User.findById(user_id)
+    let user = User.findById(user_id).populate('user')
     
     const cart = await Cart.findByIdAndUpdate(id, {
         total_discount: total_discount,
@@ -56,7 +66,7 @@ export async function updateCart (id,total_discount,total_price,state,user_id)  
        throw new Error('El carrito con ese ID no existe')
     }
 
-    const cartUpdate = await User.findById(id)
+    const cartUpdate = await User.findById(id).populate('user')
 
     if(!cartUpdate){
         throw new Error('Hubo un error al encontrar el carrito')

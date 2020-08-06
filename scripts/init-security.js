@@ -17,18 +17,10 @@ export const initSecurity = function () {
     const newUser = new User({
         method: "local",
         username: "admin",
-        local: {
-            email: "admin@admin.com",
-            password: hashPassword,
-        },
-        google: {
-            email: "admin@admin.com",
-            id: hashPassword,
-        },
-        facebook: {
-            email: "admin@admin.com",
-            id: hashPassword,
-        },
+        email: "admin@gmail.com",
+        password: hashPassword,
+        google_id: "admin@admin.com",
+        facebook: "admin@admin.com",
         name: "admin",
         lastname: "root",
         avatar: 'assets/img.js',
