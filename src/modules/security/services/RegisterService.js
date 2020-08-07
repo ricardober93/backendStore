@@ -11,10 +11,10 @@ exports.registerService = async (username, name, lastname, email, password, role
         lastname
     })
     user.method = 'local'
-    user.local.email = email
-    user.local.password = password
+    user.email = email
+    user.password = password
 
-    user.local.password = await bcrypt.hash( password, 12 )
+    user.password = await bcrypt.hash( password, 12 )
 
     if(role){
         const rolesAndPermissions = await Role.findOne({name: role.name})

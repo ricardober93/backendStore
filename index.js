@@ -33,9 +33,6 @@ app.use(corsMiddleware);
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 
-//Passport
-app.use(passport.initialize())
-
 //Routes
 app.use('/', securityRoutes);
 app.use('/', customizationRoutes);

@@ -41,7 +41,7 @@ exports.signup = async (req,res,next) => {
     }
 
     //Validate email unique
-    let emailUnique = await User.findOne({'local.email' : email});
+    let emailUnique = await User.findOne({'email' : email});
 
     if(emailUnique){
         response.errors = true
@@ -57,7 +57,7 @@ exports.signup = async (req,res,next) => {
     try {
         const html = templates.verifyUser(user.tokenState, user.name, 'http://localhost:8000')
 
-        await mail.sendMail('noreply@test.com',user.local.email,'Verify User',html)
+        await mail.sendMail('noreply@test.com',user.email,'Verify User',html)
 
         response.msg = 'User is created succesfuly, verify you email'
         res.status(200).json(response)
@@ -143,9 +143,8 @@ exports.signin = async (req,res,next) => {
     }
 
     try {
-        console.log(email)
-        const user = await User.findOne({'local.email': email})
-        console.log(user)
+        const user = await User.findOne({'email': email})
+
         if(!user){
             response.msg = 'No existe el usuario'
             return res.status(401).json(response) 
@@ -157,7 +156,7 @@ exports.signin = async (req,res,next) => {
             return res.status(401).json(response)
         }
 
-        if(!bcrypt.compare(password,user.local.password))
+        if(!bcrypt.compare(password,user.password))
             {
                 response.msg = 'Contraseña incorrecta'
                 return res.status(401).json(response)
@@ -203,7 +202,7 @@ exports.loginStrategy = async (req,res,next)=>{
 exports.resetPassword = async (req,res,next)=>{
     const email = req.params.email
 
-    const user = await User.findOne({'local.email': email})
+    const user = await User.findOne({'email': email})
     if(!user){
         res.status(404).json({msg:'No existe el usuario'})
     }
@@ -213,7 +212,7 @@ exports.resetPassword = async (req,res,next)=>{
         const url = `${req.headers.host}/reset-password/${user.id}/${token}`
         const html = templates.changePassword(user.name,url)
     
-        await mail.sendMail('noreply@test.com',user.local.email,'Change Password',html)
+        await mail.sendMail('noreply@test.com',user.email,'Change Password',html)
         res.status(200).json({msg:'Revisa tu correo'})
     } catch (error) {
         console.log(error)
@@ -232,7 +231,7 @@ exports.changePassword = async (req,res,next)=>{
         res.json({msg:'No existe el usuario'})
     }
 
-    const secret = user.local.password + user.id
+    const secret = user.password + user.id
     const payload = jwt.decode(token,secret)
 
     try {
@@ -240,7 +239,7 @@ exports.changePassword = async (req,res,next)=>{
 
             const password = await bcrypt.hash(newPassword,12)
 
-            user.local.password = password
+            user.password = password
             await user.save()
 
             res.status(200).json({msg:'Password changed, login'})

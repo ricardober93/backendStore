@@ -32,7 +32,7 @@ export const authService = async function (email, password) {
     if(user.state === false){
         return {status: false, msg:'Disabled user'};
     }
-    console.log(user)
+
     const validPassword = bcryptjs.compareSync(password, user.password)
     
     if (!validPassword) {
@@ -45,71 +45,39 @@ export const authService = async function (email, password) {
 
 }
 
-export const authMethodService = async function (auth, token, method) {
+export const authMethodService = async function (email, name, lastname, google_id) {
 
-    var user = null
-    switch (method) {
-        case 'google':
+    let user = await User.findOne({ email: email }).populate('role')
 
-            user = await User.findOne({ email: auth }).populate('role')
+    if(user){
+        if(user.state === false){
+            return {status: false, msg:'Disabled user'};
+        }
+        
+        const token = generateToken(user, user.role.name)
+    
+        return { status:true, user: user, token, msg: "User successfully validated"}
+        
+    } else {
+        
+        const role = await Role.findOne({name: 'user'})
 
-            if(user){
-                if(user.state === false){
-                    return {status: false, msg:'Disabled user'};
-                }
-                
-                const token = generateToken(user, user.role.name)
-            
-                return { status:true, user: user, token, msg: "User successfully validated"}
-                
-            } else {
-                const role = await Role.findOne({name: 'user'})
+        let newUser = new User({
+            username: name+google_id,
+            name,
+            lastname,
+            email,
+            google_id,
+            role,
+            state: true,
+        })
 
-                let newUser = new User({
-                    email: auth,
-                    google_id: token,
-                    role: role,
-                    state: true,
-                });
+        newUser.id = newUser._id
+        await newUser.save()
 
-                newUser.id = newUser._id;
-                await cart.save()
-
-                const token = generateToken(newUser, role.name)
-            
-                return { status:true, user: newUser, token, msg: "User successfully validated"}
-            }
-
-        case 'facebook':
-            user = await User.findOne({ facebook_id: token }).populate('role')
-
-            if(user){
-
-                if(user.state === true){
-                    return {status: false, msg:'Disabled user'};
-                }
-
-                const token = generateToken(user, user.role.name)
-
-                return { status:true, user: user, token, msg: "User successfully validated"}
-
-            } else {
-
-                const role = await Role.findOne({name: 'user'})
-
-                let newUser = await User.create({
-                    facebook_id: auth,
-                    role: role,
-                    state: true,
-                });
-                
-                const token = generateToken(newUser, role.name)
-            
-                return { status:true, user: newUser, token, msg: "User successfully validated"}
-            }
-
-        default:
-            return user
+        const token = generateToken(newUser, role.name)
+    
+        return { status:true, user: newUser, token, msg: "User successfully validated"}
     }
 
 }

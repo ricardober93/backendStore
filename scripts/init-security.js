@@ -15,12 +15,10 @@ export const initSecurity = function () {
     let hashPassword = bcryptjs.hashSync("123123", salt);
 
     const newUser = new User({
-        method: "local",
         username: "admin",
         email: "admin@gmail.com",
         password: hashPassword,
         google_id: "admin@admin.com",
-        facebook: "admin@admin.com",
         name: "admin",
         lastname: "root",
         avatar: 'assets/img.js',
