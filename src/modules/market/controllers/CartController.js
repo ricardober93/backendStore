@@ -11,7 +11,7 @@ import { validationResult } from "express-validator";
 module.exports.readCartsAction = async function (req, res) {
 
     logRequest(req)
-
+    console.log(req.user)
     let response = {
         errors: [],
         msg: '',

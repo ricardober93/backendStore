@@ -97,6 +97,8 @@ module.exports.updateCategoryAction = async function (req, res) {
     
     const { name, description, image_url, featured, state } = req.body;
 
+    console.log(req.body)
+
     let response = {
         errors: [],
         msg: '',

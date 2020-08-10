@@ -10,7 +10,7 @@ import { validationResult } from "express-validator";
 module.exports.readBrandsAction = async function (req, res) {
 
     logRequest(req)
-
+    
     let response = {
         errors: [],
         msg: '',
