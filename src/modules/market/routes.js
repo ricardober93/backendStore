@@ -55,7 +55,7 @@ router.get('/carts', readCartsAction);
 //Agregar un carrito
 router.post('/cart/add', addCartAction);
 //Encontrar un carrito por usuario
-router.get('/carts/user', getCartByUserAction);
+router.get('/api/carts/user', getCartByUserAction);
 //Encontrar un carrito
 router.get('/cart/:id', getCartAction);
 //Actualizar un carrito

@@ -84,8 +84,9 @@ module.exports.getCartAction = async function (req, res) {
 module.exports.getCartByUserAction = async function (req, res) {
 
     logRequest(req)
-    
-    const { id } = req.user;
+    console.log(req.headers)
+    console.log(req.user)
+    const id = '5f2f2652cb7c2f3b501be39c'
 
     let response = {
         errors: [],
