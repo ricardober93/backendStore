@@ -11,7 +11,9 @@ import { validationResult } from "express-validator";
 module.exports.readCartsAction = async function (req, res) {
 
     logRequest(req)
+    
     console.log(req.user)
+
     let response = {
         errors: [],
         msg: '',
@@ -84,9 +86,8 @@ module.exports.getCartAction = async function (req, res) {
 module.exports.getCartByUserAction = async function (req, res) {
 
     logRequest(req)
-    console.log(req.headers)
-    console.log(req.user)
-    const id = '5f2f2652cb7c2f3b501be39c'
+    
+    const { id } = req.user;
 
     let response = {
         errors: [],

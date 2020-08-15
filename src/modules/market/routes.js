@@ -51,15 +51,15 @@ router.put('/api/brand/:id', updateBrandAction);
 
 //CART
 //Retorna todas los carritos
-router.get('/carts', readCartsAction);
+router.get('/api/carts', readCartsAction);
 //Agregar un carrito
-router.post('/cart/add', addCartAction);
+router.post('/api/cart', addCartAction);
 //Encontrar un carrito por usuario
 router.get('/api/carts/user', getCartByUserAction);
 //Encontrar un carrito
-router.get('/cart/:id', getCartAction);
+router.get('/api/cart/:id', getCartAction);
 //Actualizar un carrito
-router.put('/cart/:id', updateCartAction);
+router.put('/api/cart/:id', updateCartAction);
 
 //PRODUCT
 //Retorna todas los productos
