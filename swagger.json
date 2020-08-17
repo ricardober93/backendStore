@@ -277,6 +277,218 @@
                 }
             }
         },
+        "/user": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Crear Usuario",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [{
+                        "name": "name",
+                        "in": "formData",
+                        "description": "Nombre",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "username",
+                        "in": "formData",
+                        "description": "Nombre de usuario",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "email",
+                        "in": "formData",
+                        "description": "Email",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "formData",
+                        "description": "Contraseña",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address",
+                        "in": "formData",
+                        "description": "Direccion",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "latitude",
+                        "in": "formData",
+                        "description": "Latitud",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "longitude",
+                        "in": "formData",
+                        "description": "Longitud",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "role",
+                        "in": "formData",
+                        "description": "Rol del usuario",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "state",
+                        "in": "formData",
+                        "description": "Estado del usuario",
+                        "required": true,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Se creo el usuario con exito"
+                    },
+                    "400": {
+                        "description": "La petición no fue exitosa o El usuario con ese ID no existe"
+                    },
+                    "401": {
+                        "description": "No Autorizado"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:user",
+                        "read:user"
+                    ]
+                }]
+            }
+        },
+        "/user/{id}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Devuelve un usuario por ID",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "Id de usuario",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Se encontro el usuario con exito"
+                    },
+                    "404": {
+                        "description": "No hemos encontrado un usuario con ese ID"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:user",
+                        "read:user"
+                    ]
+                }]
+            },
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Editar usuario por ID",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+
+                "parameters": [{
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id de usuario",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "name",
+                        "in": "formData",
+                        "description": "Nombre",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "username",
+                        "in": "formData",
+                        "description": "Nombre de usuario",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "email",
+                        "in": "formData",
+                        "description": "Email",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address",
+                        "in": "formData",
+                        "description": "Direccion",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "latitude",
+                        "in": "formData",
+                        "description": "Latitud",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "longitude",
+                        "in": "formData",
+                        "description": "Longitud",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Se modifico el usuario con exito"
+                    },
+                    "401": {
+                        "description": "No Autorizado"
+                    },
+                    "404": {
+                        "description": "No hemos encontrado un usuario con ese ID"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:user",
+                        "read:user"
+                    ]
+                }]
+            }
+        },
         "/categories/all": {
             "get": {
                 "tags": [

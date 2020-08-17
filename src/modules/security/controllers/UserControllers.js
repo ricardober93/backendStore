@@ -4,8 +4,14 @@ import bcrypt from 'bcrypt'
 import shortid from 'shortid'
 import jwt from 'jsonwebtoken'
 import { logRequest } from '../../logger/logger';
+import {   
+    updatePasswordUser,
+    updatePasswordAdmin,
+    addUser,
+    getUser,
+    updateUser
+} from '../services/UserService';
 import { validationResult } from "express-validator";
-import { generateToken, passwordOldToken }  from '../services/authUser'
 import { registerService }  from '../services/RegisterService'
 import mail from '../../middleware/nodemailer'
 import templates from '../utils/templatesMail'
@@ -71,184 +77,123 @@ exports.signup = async (req,res,next) => {
     }
 }
 
-//Verify user
-exports.verify = async (req,res,next)=>{
+module.exports.updatePasswordUserAction = async function (req, res) {
 
     logRequest(req)
-
-    const {tokenState} = req.body;
-
+    
     let response = {
         errors: [],
-        msg: ''
+        message: '',
+        data: {},
     }
 
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
         response.errors = errors.array()
-        response.msg = 'La petición no fue exitosa'
+        response.message = 'La petición no fue exitosa'
         return res.status(400).json(response) 
-        
     }
 
-
-    const user = await User.findOne({'tokenState':tokenState.trim()})
-
-    if(!user){
-        response.errors = true
-        response.msg = 'Codigo incorrecto'
-        return res.status(401).json(respones)
-    }
-
-    user.state = true
-    user.tokenState = ''
-
+    //Verifico si el usuario existe en la base de datos
     try {
-        await user.save()
-        response.msg = 'Verificacion exitosa, inicia sesion'
-        return res.status(200).json(response)
-    } catch (error) {
-        console.log(error)
-        next(error)
-    }
+        let user = await updatePasswordUser(req.user.id, req.body.currentPassword, req.body.newPassword);
 
-}
-
-//Login
-exports.signin = async (req,res,next) => {
-
-    logRequest(req)
-    
-    const { password, email } = req.body;
-    
-    let response = {
-        errors: [],
-        msg: '',
-        data: {},
-    }
-    
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-        response.errors = errors.array()
-        response.msg = 'La petición no fue exitosa'
-        res.status(400).json(response) 
-        next()
-    }
-
-    if(password == '' || email == ''){
-        res.json({msg: 'Todos los campos son obligatorios'})
-        next()
-    }
-
-    try {
-        const user = await User.findOne({'email': email})
-
-        if(!user){
-            response.msg = 'No existe el usuario'
-            return res.status(401).json(response) 
+        if (!user) {
+            response.errors.push({ param: "id", msg: "El usuario con ese ID no existe" })
+            return res.status(400).json(response)
         }
-
-        //Status true o false in user
-        if(!user.state){
-            response.msg = 'Verifica tu correo electronico'
-            return res.status(401).json(response)
+    }
+    catch (error) {
+        if (error instanceof InvalidPasswordError) {
+            response.errors.push({ param: "currentPassword", msg: error.message })
+            return res.status(400).json(response)
         }
-
-        if(!bcrypt.compare(password,user.password))
-            {
-                response.msg = 'Contraseña incorrecta'
-                return res.status(401).json(response)
-            }
-            //All right
-        const sendToken = await generateToken(user)
-        response.data = sendToken
-        res.status(200).json(response)
-        next()
-
-    } catch (error) {
-        console.error(error)
-        next(error)
-    }
-}
-
-//Login facebook or google
-exports.loginStrategy = async (req,res,next)=>{
-    
-    logRequest(req)
-    
-    let response = {
-        errors: [],
-        msg: '',
-        data: {},
-    }
-    
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-        response.errors = errors.array()
-        response.msg = 'La petición no fue exitosa'
-        res.status(400).json(response) 
-        next()
+        response.errors.push({ msg: error.message })
+        return res.status(400).json(response)
     }
 
-    const sendToken = await generateToken(req.user)
-    response.data = sendToken
+   
+    response.message = 'Se modifico la contraseña con exito'
     res.status(200).json(response)
-    next()
+
 }
 
-exports.resetPassword = async (req,res,next)=>{
-    const email = req.params.email
+module.exports.updatePasswordAdminAction = async function (req, res) {
 
-    const user = await User.findOne({'email': email})
-    if(!user){
-        res.status(404).json({msg:'No existe el usuario'})
+    logRequest(req)
+
+    let response = [{
+        errors: [],
+        message: '',
+        data: [],
+    }]
+
+    const errors = validationResult(req);
+    
+    if (!errors.isEmpty()) {
+        response[0].errors = errors.array()
+        response[0].message = 'La petición no fue exitosa'
+        return res.status(400).json(response)
     }
 
-    try {
-        const token = await passwordOldToken(user)
-        const url = `${req.headers.host}/reset-password/${user.id}/${token}`
-        const html = templates.changePassword(user.name,url)
-    
-        await mail.sendMail('noreply@test.com',user.email,'Change Password',html)
-        res.status(200).json({msg:'Revisa tu correo'})
-    } catch (error) {
-        console.log(error)
-        next(error)
+    const user = await updatePasswordAdmin(req.params.id, req.body.password);
+
+    if (!user) {
+        response[0].message = 'El usuario con ese ID no existe'
+        return res.status(404).json(response)
     }
-    
+
+    response[0].message = 'Se modifico la contraseña con exito'
+    res.status(200).json(response)
 }
 
-exports.changePassword = async (req,res,next)=>{
-    const {userid,token} = req.params
-    const {newPassword} = req.body
+module.exports.addUserAction = async function (req, res) {
 
-    const user = await User.findById(userid)
+    logRequest(req)
 
-    if(!user){
-        res.json({msg:'No existe el usuario'})
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    
+    const user = await addUser(req.body.name, req.body.username,
+        req.body.email, req.body.password, req.body.address, 
+        req.body.latitude, req.body.longitude, req.body.role,
+        req.body.state);
+    const result = await user.save();
+
+    res.status(201).send(user)
+
+}
+
+module.exports.getUserAction = async function (req, res) {
+
+    const user = await getUser(req.params.id);
+    if (!user)
+        return res.status(404).send('No hemos encontrado un usuario con ese ID');
+
+    res.send(user)
+
+}
+
+module.exports.updateUserAction = async function (req, res) {
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array()});
     }
 
-    const secret = user.password + user.id
-    const payload = jwt.decode(token,secret)
-
-    try {
-        if(payload.id == user.id ){
-
-            const password = await bcrypt.hash(newPassword,12)
-
-            user.password = password
-            await user.save()
-
-            res.status(200).json({msg:'Password changed, login'})
-            next()
-        }
-
-        res.status(401).json({msg:'Credencial expirado'})
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({msg:'Ha ocurrido un error'})
+    try{
+        const userUpdate = await updateUser(req.params.id, req.body.username,
+        req.body.name, req.body.email, req.body.address,
+        req.body.latitude, req.body.longitude);
+        res.status(200).send(userUpdate)
     }
+    catch(error){
+        res.status(400).send({ error:error.message }) 
+    }
+
 }
