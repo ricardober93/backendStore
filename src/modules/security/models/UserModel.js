@@ -13,6 +13,9 @@ const UserModel = new Schema({
     type: String,
     unique: true,
   },
+  phone: {
+    type: Number
+  },
   password: {
     type: String
   },

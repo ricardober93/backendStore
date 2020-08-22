@@ -73,12 +73,14 @@ export async function getUser (id) {
     return user;
 }
 
-export async function updateUser (id, username, name, email, address, latitude, longitude)  {
+export async function updateUser (id, username, name, lastname, email, phone, address, latitude, longitude)  {
 
     const user = await User.findByIdAndUpdate(id, {
         username: username,
         name: name,
+        lastname: lastname,
         email: email,
+        phone,
         address: address,
         latitude: latitude,
         longitude: longitude

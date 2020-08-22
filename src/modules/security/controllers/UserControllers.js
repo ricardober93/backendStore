@@ -86,7 +86,7 @@ module.exports.updatePasswordUserAction = async function (req, res) {
         message: '',
         data: {},
     }
-
+    console.log(req.user)
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -97,7 +97,7 @@ module.exports.updatePasswordUserAction = async function (req, res) {
 
     //Verifico si el usuario existe en la base de datos
     try {
-        let user = await updatePasswordUser(req.user.id, req.body.currentPassword, req.body.newPassword);
+        let user = await updatePasswordUser(req.user._id, req.body.currentPassword, req.body.newPassword);
 
         if (!user) {
             response.errors.push({ param: "id", msg: "El usuario con ese ID no existe" })
@@ -188,7 +188,7 @@ module.exports.updateUserAction = async function (req, res) {
 
     try{
         const userUpdate = await updateUser(req.params.id, req.body.username,
-        req.body.name, req.body.email, req.body.address,
+        req.body.name, req.body.lastname, req.body.email, req.body.phone, req.body.address,
         req.body.latitude, req.body.longitude);
         res.status(200).send(userUpdate)
     }
