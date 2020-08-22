@@ -62,15 +62,15 @@ export const updateColorsActionMiddleware = requestValidate([
 
 export const updateLanguageActionMiddleware = requestValidate([
 
-   check('color_primary')
+   check('language')
       .exists()
       .not()
       .isEmpty()
-      .withMessage(MessageValidator.isRequired('color_primary'))
+      .withMessage(MessageValidator.isRequired('language'))
       .isLength({
-         min: 3,
+         min: 1,
          max: 10
       })
-      .withMessage(MessageValidator.betweenLength('color_primary', 3, 10)),
+      .withMessage(MessageValidator.betweenLength('language', 1, 10)),
 
 ]);

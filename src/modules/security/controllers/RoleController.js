@@ -1,20 +1,25 @@
 import Role from '../models/RoleModel'
+import { logRequest, logError } from '../../logger/logger'
+import { addRoleService } from '../services/RoleService'
+import {
+    createResponseFormat
+} from '../../../helpers/responseFormat'
+let response = createResponseFormat()
 
-exports.addRole = async (req,res,next) => {
-    //AUTHORIZATE ONLY ADMIN
+exports.addRoleAction = async (req,res,next) => {
+    
+    logRequest(req)
 
     const { name, permissions } = req.body;
-    if(!name || !permissions[0]) {
-        res.status(400).json({ error:true, message: 'Todos los campos son obligatorios'})
-        return next()
-    }
 
-    const role = new Role({name, permissions})
+    const role = await addRoleService(name, permissions)
+
     try {
-        await role.save()
+        response.data = roles
+        return res.status(201).send(response)
     } catch (error) {
-        console.log(error)
-        res.json({message: 'Error al crear el rol'})
-        next()
+        response.errors.push(error)
+        logError(req, error);
+        return res.status(500).send(response)
     }
 }

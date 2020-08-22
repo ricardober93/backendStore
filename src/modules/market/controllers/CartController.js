@@ -39,7 +39,7 @@ module.exports.addCartAction = async function (req, res) {
 
     logRequest(req)
 
-    const { products, total, total_discount } = req.body;
+    const { products, total, total_discount, form_mp } = req.body;
 
     let response = {
         errors: [],
@@ -55,7 +55,7 @@ module.exports.addCartAction = async function (req, res) {
     try {
 
         const cart = await addCart(products, total, total_discount, req.user.id);
-        const mercadopago = await paymentMercadoPago(products, req.user.id, cart._id);
+        const mercadopago = await paymentMercadoPago(products, form_mp, req.user.id, cart._id);
         
         let data = {
             cart,

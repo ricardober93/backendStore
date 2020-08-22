@@ -2,10 +2,19 @@ import Role from '../models/RoleModel'
 import User from '../models/UserModel'
 import bcrypt from 'bcrypt'
 import randomString from 'crypto-random-string'
-
-exports.registerService = async (username, name, lastname, email, password, role) => {
+/**
+ *
+ *
+ * @param {string} username
+ * @param {string} name
+ * @param {string} lastname
+ * @param {string} email
+ * @param {string} password
+ * @return {object} 
+ */
+const registerService = async (username, name, lastname, email, password) => {
     
-    user.password = await bcrypt.hash( password, 12 )
+    hashPassword = await bcrypt.hash( password, 12 )
 
     const defaultRole = await Role.findOne({'name':'user'})
 
@@ -14,11 +23,11 @@ exports.registerService = async (username, name, lastname, email, password, role
         name,
         email,
         lastname,
-        password,
+        password: hashPassword,
         role: defaultRole
     })
 
-    let result = await user.save()
+    await user.save()
     
-    return result
+    return user
 }

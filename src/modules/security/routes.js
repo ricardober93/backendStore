@@ -12,15 +12,18 @@ import Role from "./controllers/RoleController";
 import { authAction, authMethodAction } from "./controllers/AuthController";
 import { authToken } from '../middleware/auth'
 import {
-    authActionMiddleware,
-    signupActionMiddleware
+    signupActionMiddleware,
+    addUserActionMiddleware
 } from './middleware/requests/userMiddleware'
+import {
+    authActionMiddleware
+} from './middleware/requests/authMiddleware'
 
 //Users
 //Signup
 router.post('/api/signup', signupActionMiddleware, signup)
 //Agregar un usuario
-router.post('/api/user', [authToken], addUserAction);
+router.post('/api/user', [authToken, addUserActionMiddleware], addUserAction);
 //Encontrar un usuario
 router.get('/api/user/:id', getUserAction);
 //Actualizar un usuario
@@ -40,6 +43,6 @@ router.get("/profile", Auth.validateToken); */
 
 //Roles
 //Add role
-router.post("/api/role", Role.addRole);
+router.post("/api/role", Role.addRoleAction);
 
 export default router

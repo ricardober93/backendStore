@@ -2,6 +2,9 @@ import User from "../models/UserModel";
 import Role from "../models/RoleModel";
 import bcryptjs from 'bcryptjs'
 import jsonwebtoken from "jsonwebtoken";
+import {
+    MessageResponse
+} from "../../../helpers/messageResponse";
 
 function generateToken(user, roleName){
     let token = jsonwebtoken.sign(
@@ -21,42 +24,57 @@ function generateToken(user, roleName){
     )
     return token
 }
-
-export const authService = async function (email, password) {
+/**
+ *
+ *
+ * @param {string} email
+ * @param {string} password
+ * @return {object} 
+ */
+const authService = async function (email, password) {
     
     const user = await User.findOne({email: email}).populate('role')
 
     if(!user) {
-        throw ('El usuario no existe')
+        throw (MessageResponse.notFound())
     }
+
     if(user.state === false){
-        return {status: false, msg:'Disabled user'};
+        throw ('Disabled user');
     }
 
     const validPassword = bcryptjs.compareSync(password, user.password)
     
     if (!validPassword) {
-        return {status: false, msg:'The username or password is invalid'};
+        throw (MessageResponse.unauthorized())
     }
 
     const token = generateToken(user, user.role.name)
 
-    return { status:true, user, token, msg: "User successfully validated"}
+    return { user, token }
 
 }
-
-export const authMethodService = async function (email, name, lastname, google_id) {
+/**
+ *
+ *
+ * @param {string} email
+ * @param {string} name
+ * @param {string} lastname
+ * @param {string} google_id
+ * @return {object} 
+ */
+const authMethodService = async function (email, name, lastname, google_id) {
 
     let user = await User.findOne({ email: email }).populate('role')
 
     if(user){
         if(user.state === false){
-            return {status: false, msg:'Disabled user'};
+            throw ('Disabled user');
         }
         
         const token = generateToken(user, user.role.name)
     
-        return { status:true, user: user, token, msg: "User successfully validated"}
+        return { status:true, user, token }
         
     } else {
         
@@ -77,7 +95,7 @@ export const authMethodService = async function (email, name, lastname, google_i
 
         const token = generateToken(newUser, role.name)
     
-        return { status:true, user: newUser, token, msg: "User successfully validated"}
+        return { status:true, user: newUser, token}
     }
 
 }

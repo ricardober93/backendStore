@@ -2,12 +2,25 @@ import User from "../models/UserModel";
 import Role from "../models/RoleModel";
 import bcryptjs from "bcryptjs";
 import InvalidPasswordError from '../errors/InvalidPasswordError'
+import {
+    MessageResponse
+} from '../../../helpers/messageResponse'
 
-export async function updatePasswordUser (id, currentPassword, newPassword) {
-    //Consultar avatar de un usuario
+/**
+ *
+ *
+ * @export
+ * @param {string} id
+ * @param {string} currentPassword
+ * @param {string} newPassword
+ * @return {object} 
+ */
+export async function updatePasswordUserService (id, currentPassword, newPassword) {
+    
     let user = await User.findById(id)
+
     if(!user){
-        throw new Error("No se encontro un usuario con ese ID")
+        throw (MessageResponse.notFound())
     }
     
     //Valido si la contraseña actual coincide con la almacenada en la DB
@@ -16,6 +29,7 @@ export async function updatePasswordUser (id, currentPassword, newPassword) {
     if (!validPassword) {
         throw new InvalidPasswordError()
     }
+
     //Encripto la contraseña y la actualizo en la DB
     let salt = bcryptjs.genSaltSync(10);
     let hashPassword = bcryptjs.hashSync(newPassword, salt);
@@ -23,6 +37,7 @@ export async function updatePasswordUser (id, currentPassword, newPassword) {
     let userUpdate = await User.findByIdAndUpdate(id, {
         password: hashPassword,
     })
+
     return userUpdate;
 }
 
@@ -39,29 +54,50 @@ export async function updatePasswordAdmin (id, password) {
     return user;
 }
 
-export async function addUser (name, username, email, password, address, latitude, longitude, role, state) {
+/**
+ *
+ *
+ * @export
+ * @param {string} name
+ * @param {string} username
+ * @param {string} email
+ * @param {string} password
+ * @param {string} address
+ * @param {string} latitude
+ * @param {string} longitude
+ * @param {string} role
+ * @param {boolean} state
+ * @return {object} 
+ */
+export async function addUserService (name, username, email, password, address, latitude, longitude, role, state) {
 
     let salt = bcryptjs.genSaltSync(10);
     let hashPassword = bcryptjs.hashSync(password, salt);
     let newRole = await Role.findOne({"name": role})
 
     const user = new User({
-        name: name,
-        username: username,
-        email: email,
+        name,
+        username,
+        email,
         password: hashPassword,
-        address: address,
-        latitude: latitude,
-        longitude: longitude,
+        address,
+        latitude,
+        longitude,
         role: newRole,
-        state: state,
+        state,
     });
-    
     user.id = user._id;
     await user.save()
+    
     return user;
 }
-
+/**
+ *
+ *
+ * @export
+ * @param {string} id
+ * @return {object} 
+ */
 export async function getUser (id) {
     
     const user = await User.findById(id)

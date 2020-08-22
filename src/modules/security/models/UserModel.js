@@ -27,9 +27,18 @@ const UserModel = new Schema({
   lastname: {
     type: String,
   },
+  address: {
+    type: String,
+  },
+  latitude: {
+    type: String,
+  },
+  longitude: {
+    type: String,
+  },
   avatar: {
     type: String,
-    // default: 'assets/avatar/user.png'
+    default: 'assets/avatar/user.png'
   },
   state: {
     type: Boolean,

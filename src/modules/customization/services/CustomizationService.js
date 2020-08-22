@@ -23,18 +23,16 @@ export function readCustomizationService () {
             return false;
         })
 }
-
 /**
  * updateColorsService
  *
- * @export
  * @param {string} colorPrimary
  * @param {string} colorSecondary
  * @param {string} textPrimary
  * @param {string} textSecondary
  * @return {object} 
  */
-export async function updateColorsService(colorPrimary, colorSecondary, textPrimary, textSecondary) {
+async function updateColorsService(colorPrimary, colorSecondary, textPrimary, textSecondary) {
 
     const colors = await Customization.updateOne({
         color_primary: colorPrimary,

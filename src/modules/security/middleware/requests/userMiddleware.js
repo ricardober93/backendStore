@@ -11,28 +11,6 @@ import {
 } from '../../../../helpers/messageValidator';
 import { MessageResponse } from '../../../../helpers/messageResponse';
 
-export const authActionMiddleware = requestValidate([
-
-   check('email')
-      .exists()
-      .withMessage(MessageValidator.isRequired('email'))
-      .isLength({
-         min: 5,
-         max: 50
-      })
-      .withMessage(MessageValidator.betweenLength('email', 5, 50))
-      .isEmail(),
-
-   check('password')
-      .exists()
-      .withMessage(MessageValidator.isRequired('password'))
-      .isLength({
-         min: 6
-      })
-      .withMessage(MessageValidator.minLength('password', 6))
-
-]);
-
 //Validaciones al registrarse
 export const signupActionMiddleware = requestValidate([
 
@@ -106,6 +84,34 @@ export const addUserActionMiddleware = requestValidate([
          max: 50
       })
       .withMessage(MessageValidator.betweenLength('name', 3, 50)),
+
+   check('username')
+      .exists()
+      .not()
+      .isEmpty()
+      .withMessage(MessageValidator.isRequired('username'))
+      .isLength({
+         min: 3,
+         max: 50
+      })
+      .withMessage(MessageValidator.betweenLength('username', 3, 50))
+      .custom((value, {
+         req
+      }) => {
+         return new Promise((resolve, reject) => {
+            User.findOne({
+               username: req.body.username
+            }, function (err, user) {
+               if (err) {
+                  reject(new Error(MessageResponse.generalError()))
+               }
+               if (Boolean(user)) {
+                  reject(new Error(MessageValidator.inUse('username')))
+               }
+               resolve(true)
+            });
+         });
+      }),
 
    check('email')
       .exists()
