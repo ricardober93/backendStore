@@ -56,7 +56,7 @@ module.exports.updatePasswordUserAction = async function (req, res) {
     let { currentPassword, newPassword } = req.body
     //Verifico si el usuario existe en la base de datos
     try {
-        let user = await updatePasswordUserService(req.user.id, currentPassword, newPassword);
+        let user = await updatePasswordUserService(req.user._id, currentPassword, newPassword);
     } catch (error) {
         response.errors.push(error)
         logError(req, error);
@@ -138,7 +138,7 @@ module.exports.updateUserAction = async function (req, res) {
 
     try{
         const userUpdate = await updateUser(req.params.id, req.body.username,
-        req.body.name, req.body.email, req.body.address,
+        req.body.name, req.body.lastname, req.body.email, req.body.phone, req.body.address,
         req.body.latitude, req.body.longitude);
         res.status(200).send(userUpdate)
     }
