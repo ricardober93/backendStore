@@ -21,7 +21,7 @@ exports.signup = async (req,res,next) => {
     
     logRequest(req)
 
-    const { lastname, email, name, password, role } = req.body;
+    const { name, lastname, email, password, role } = req.body;
 
     let response = {
         errors: [],

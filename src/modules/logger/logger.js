@@ -1,4 +1,8 @@
-const { createLogger, format, transports} = require('winston');
+const {
+    createLogger,
+    format,
+    transports
+} = require('winston');
 
 export const logger = createLogger({
     transports: [
@@ -14,13 +18,14 @@ export const logger = createLogger({
     ]
 })
 
-function getDateForLog(){
+function getDateForLog() {
     const f = new Date();
     const fecha = f.getFullYear() + '/' + f.getMonth() + '/' + f.getDate() + ' ' + f.getHours() + ':' + f.getMinutes() + ':' + f.getSeconds();
     return fecha
 }
 
-module.exports.logRequest =  function (req){
+module.exports.logRequest = function (req) {
+
     let header = {
         date: getDateForLog(),
         host: req.headers.host,
@@ -30,12 +35,23 @@ module.exports.logRequest =  function (req){
     }
 
     logger.info(
-        "{ 'Fecha': '" + header.date + "', 'Mensaje': { 'tipo': 'REQUEST', 'Host': '" + header.host + "', 'Origin': '" + header.origin + "', 'Endpoint': '" + header.referer + "', 'UserAgent': '" + header.userAgent + "' } }"  
+        "{ 'Date': '" + header.date + "', 'Message': { 'tipo': 'REQUEST', 'Host': '" + header.host + "', 'Origin': '" + header.origin + "', 'Endpoint': '" + header.referer + "', 'UserAgent': '" + header.userAgent + "' } }"
     )
 
 }
 
+module.exports.logError = function (req, error) {
 
-module.exports.logResponse =  function (response){
+    let header = {
+        date: getDateForLog(),
+        referer: req.headers ? req.headers.referer : req
+    }
+
+    logger.error(
+        `{ 'Date': '${header.date}', 'Message': { 'tipo': 'ERROR', 'Endpoint': '${header.referer}', 'message': '${error}'} }`
+    )
 
 }
+
+module.exports.logResponse = function (response) {}
+module.exports.logError = function (response) {}

@@ -3,7 +3,16 @@ import fs from 'fs-extra';
 import path from 'path';
 import randomString from "../utils/randomString";
 import sizeOf from 'image-size'
+import {
+    MessageResponse
+} from "../../../helpers/messageResponse";
 
+/**
+ * readCustomizationService
+ *
+ * @export
+ * @return {object} 
+ */
 export function readCustomizationService () {
     return Customization.findOne()
         .then(customization => {
@@ -15,6 +24,16 @@ export function readCustomizationService () {
         })
 }
 
+/**
+ * updateColorsService
+ *
+ * @export
+ * @param {string} colorPrimary
+ * @param {string} colorSecondary
+ * @param {string} textPrimary
+ * @param {string} textSecondary
+ * @return {object} 
+ */
 export async function updateColorsService(colorPrimary, colorSecondary, textPrimary, textSecondary) {
 
     const colors = await Customization.updateOne({
@@ -25,12 +44,19 @@ export async function updateColorsService(colorPrimary, colorSecondary, textPrim
     }) 
 
     if(!colors){
-       throw new Error('Los colores no existen')
+       throw (MessageResponse.notFound())
     }
 
     return colors;
 }
 
+/**
+ * updateLanguageService
+ *
+ * @export
+ * @param {string} language
+ * @return {object} 
+ */
 export async function updateLanguageService(language) {
 
     const currentLanguage = await Customization.updateOne({
@@ -38,12 +64,24 @@ export async function updateLanguageService(language) {
     }) 
 
     if(!currentLanguage){
-       throw new Error('El lenguage no existe')
+        throw (MessageResponse.notFound())
     }
 
     return currentLanguage;
 }
 
+/**
+ * changeLogoPreview
+ *
+ * @export
+ * @param {string} username
+ * @param {string} filepath
+ * @param {string} originalname 
+ * @param {string} size
+ * @param {string} logo_title
+ * @param {string} logo_mode
+ * @return {object} 
+ */
 export const changeLogoPreview = async function(username, filepath, originalname, size, logo_title, logo_mode){
     //Reemplaza la imagen de vista previa
     const customizationRemove = await getCustomization()
@@ -54,7 +92,7 @@ export const changeLogoPreview = async function(username, filepath, originalname
         }
         catch (err) {
             if (err.code === 'ENOENT') {
-            console.log('file or directory does not exist');
+                throw ('file or directory does not exist');
             }
         }
     }
@@ -72,7 +110,7 @@ export const changeLogoPreview = async function(username, filepath, originalname
             const updateLogo = await Customization.updateMany({}, {logo_preview, logo_title, logo_mode});
 
             if(!updateLogo){
-                return { state:false, msg: "Error en la base de datos" } 
+                throw (MessageResponse.dbError())
             }
             await fs.rename(imageTempPath, targetPath);
             return {logo_preview, logo_mode, logo_title};
@@ -85,7 +123,7 @@ export const changeLogoPreview = async function(username, filepath, originalname
     } else if(logo_title && logo_mode){
         const updateLogo = await Customization.updateMany({}, { logo_preview : '', logo_title, logo_mode });
         if(!updateLogo){
-            return { state:false, msg: "Error en la base de datos" } 
+            throw (MessageResponse.dbError())
         } else {
             return {logo_preview : '', logo_title, logo_mode};
         }
@@ -94,6 +132,18 @@ export const changeLogoPreview = async function(username, filepath, originalname
     }
 }
 
+/**
+ * changeLogo
+ *
+ * @export
+ * @param {string} username
+ * @param {string} filepath
+ * @param {string} originalname 
+ * @param {string} size
+ * @param {string} logo_title
+ * @param {string} logo_mode
+ * @return {object} 
+ */
 export const changeLogo = async function(username, filepath, originalname, size, logo_title, logo_mode) {
     
     //elimina imagen de logo antigua
@@ -123,7 +173,7 @@ export const changeLogo = async function(username, filepath, originalname, size,
             const updateLogo = await Customization.updateMany({}, {logo, logo_title, logo_mode});
 
             if(!updateLogo){
-                return { state:false, msg: "Error en la base de datos" } 
+                throw (MessageResponse.dbError()) 
             }
             await fs.rename(imageTempPath, targetPath);
             return {logo, logo_mode, logo_title};
@@ -136,7 +186,7 @@ export const changeLogo = async function(username, filepath, originalname, size,
     } else if(logo_title && logo_mode){
         const updateLogo = await Customization.updateMany({}, { logo : '', logo_title, logo_mode });
         if(!updateLogo){
-            return { state:false, msg: "Error en la base de datos" } 
+            throw (MessageResponse.dbError())
         } else {
             return {logo : '', logo_title, logo_mode};
         }
@@ -145,7 +195,12 @@ export const changeLogo = async function(username, filepath, originalname, size,
     }
 };
 
-
+/**
+ * getCustomization
+ *
+ * @export
+ * @return {object} 
+ */
 function getCustomization(){
     return Customization.findOne()
         .then(customization => {

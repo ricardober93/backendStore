@@ -1,0 +1,269 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Documentando API con Swagger.",
+        "version": "0.1.0",
+        "title": "API Documentada"
+    },
+    "host": "localhost:8000",
+    "basePath": "/api",
+    "tags": [{
+            "name": "Auth",
+            "description": "Autenticacion del usuario"
+        },
+        {
+            "name": "Customization",
+            "description": "Operaciones de personalizacion"
+        }
+    ],
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "paths": {
+        "/auth": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Loguea al usuario y genera el Token",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [{
+                        "name": "email",
+                        "in": "formData",
+                        "description": "Correo electronico",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "formData",
+                        "description": "Contraseña",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Se logueo con exito, retorna el token"
+                    },
+                    "400": {
+                        "description": "La petición no fue exitosa o Los parametros son inconsistentes"
+                    },
+                    "500": {
+                        "description": "Error de servidor"
+                    }
+                }
+            }
+        },
+        "/auth-method": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Loguea al usuario y genera el Token",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [{
+                        "name": "token",
+                        "in": "formData",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "method",
+                        "in": "formData",
+                        "description": "Metodo de autenticacion",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Se logueo con exito, retorna el token"
+                    },
+                    "400": {
+                        "description": "La petición no fue exitosa o Los parametros son inconsistentes"
+                    },
+                    "500": {
+                        "description": "Error de servidor"
+                    }
+                }
+            }
+        },
+        "/customization": {
+            "get": {
+                "tags": [
+                    "Customization"
+                ],
+                "summary": "Devuelve la configuracion de personalizacion",
+                "description": "",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Se encontro la configuracion de personalizacion con exito"
+                    },
+                    "400": {
+                        "description": "La petición no fue exitosa"
+                    }
+                }
+            }
+        },
+        "/colors": {
+            "put": {
+                "tags": [
+                    "Customization"
+                ],
+                "summary": "Editar Colores de personalizacion",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [{
+                        "name": "color_primary",
+                        "in": "formData",
+                        "description": "Color Primario",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "color_secondary",
+                        "in": "formData",
+                        "description": "Color Secundario",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "text_primary",
+                        "in": "formData",
+                        "description": "Fuente primario",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "text_secondary",
+                        "in": "formData",
+                        "description": "Fuente Secundario",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Se modifico los colores de personalizacion con exito"
+                    },
+                    "400": {
+                        "description": "La petición no fue exitosa o Los parametros son inconsistentes"
+                    },
+                    "401": {
+                        "description": "No Autorizado"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:user",
+                        "read:user"
+                    ]
+                }]
+            }
+        },
+        "/language": {
+            "put": {
+                "tags": [
+                    "Customization"
+                ],
+                "summary": "Editar configuracion de lenguaje",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [{
+                    "name": "language",
+                    "in": "formData",
+                    "description": "Lenguaje",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Se modifico el lenguaje de personalizacion con exito"
+                    },
+                    "400": {
+                        "description": "La petición no fue exitosa o Los parametros son inconsistentes"
+                    },
+                    "401": {
+                        "description": "No Autorizado"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:user",
+                        "read:user"
+                    ]
+                }]
+            }
+        }
+    },
+    "securityDefinitions": {
+        "auth_token": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "definitions": {
+        "Customizations": {
+            "type": "object",
+            "properties": {
+                "color_primary": {
+                    "type": "string"
+                },
+                "color_secondary": {
+                    "type": "string"
+                },
+                "text_primary": {
+                    "type": "string"
+                },
+                "text_secondary": {
+                    "type": "string"
+                },
+                "logo": {
+                    "type": "string"
+                },
+                "language": {
+                    "type": "string"
+                }
+            },
+            "xml": {
+                "name": "Customization"
+            }
+        }
+    },
+    "externalDocs": {
+        "description": "Find out more about Swagger",
+        "url": "http://swagger.io"
+    }
+}
