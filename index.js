@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import express from 'express';
 //import SetupPassport from './src/modules/middleware/Passport'
-import {logger} from './src/modules/logger/logger';
+import { logger } from './src/modules/logger/logger';
 import { jwtAuth, handleAuthError } from './src/modules/security/middleware/auth';
 import rbacMiddleware from './src/modules/security/middleware/rbacMiddleware';
 import corsMiddleware from "./src/modules/middleware/corsMiddleware";

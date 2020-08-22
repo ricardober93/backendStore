@@ -11,6 +11,10 @@ import {
 import Role from "./controllers/RoleController";
 import { authAction, authMethodAction } from "./controllers/AuthController";
 import { authToken } from '../middleware/auth'
+import {
+    authActionMiddleware,
+    signupActionMiddleware
+} from './middleware/requests/userMiddleware'
 
 //Users
 //Signup

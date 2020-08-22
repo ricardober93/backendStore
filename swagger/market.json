@@ -508,7 +508,7 @@
                     ]
                 }]
             }
-        },
+        }
     },
     "securityDefinitions": {
         "auth_token": {
@@ -516,8 +516,6 @@
             "name": "Authorization",
             "in": "header"
         }
-    },
-    "definitions": {
     },
     "externalDocs": {
         "description": "Find out more about Swagger",

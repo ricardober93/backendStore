@@ -2,7 +2,7 @@ const {
    param,
    check,
 } = require('express-validator');
-import User from '../../models/UserModel'
+import User from '../../../security/models/UserModel'
 import {
    requestValidate
 } from '../../../middleware/requestValidate';

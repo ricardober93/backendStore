@@ -1,7 +1,6 @@
 import { logRequest, logError } from '../../logger/logger';
 import { validationResult } from "express-validator";
 import { readCustomizationService, updateColorsService, updateLanguageService, changeLogo, changeLogoPreview} from '../services/CustomizationService';
-import { response } from 'express';
 import {
     createResponseFormat
 } from '../../../helpers/responseFormat'
