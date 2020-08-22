@@ -4,15 +4,14 @@ import {
     addCart,
     getCart,
     getCartByUser,
-    updateCart
+    updateCart,
+    paymentMercadoPago
 } from '../services/CartService';
 import { validationResult } from "express-validator";
 
 module.exports.readCartsAction = async function (req, res) {
 
     logRequest(req)
-    
-    console.log(req.user)
 
     let response = {
         errors: [],
@@ -40,7 +39,7 @@ module.exports.addCartAction = async function (req, res) {
 
     logRequest(req)
 
-    const { products, total, total_discount, user_id } = req.body;
+    const { products, total, total_discount } = req.body;
 
     let response = {
         errors: [],
@@ -48,13 +47,25 @@ module.exports.addCartAction = async function (req, res) {
         data: {},
     }
 
-    const cart = await addCart(products, total, total_discount, user_id);
-    const result = await cart.save();
+    if (!req.user) {
+        response.msg = 'No autorizado'
+        return res.status(401).json(response)
+    }
 
     try {
-        response.data = result
+
+        const cart = await addCart(products, total, total_discount, req.user.id);
+        const mercadopago = await paymentMercadoPago(products, req.user.id, cart._id);
+        
+        let data = {
+            cart,
+            mercadopago,
+        }
+
+        response.data = data
         res.status(201).json(response)
     } catch (error) {
+        console.error(error)
         response.msg = 'Error de servidor'
         res.status(500).json(response)
     }
