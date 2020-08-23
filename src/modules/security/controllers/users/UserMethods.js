@@ -40,6 +40,6 @@ exports.createUserStrategy = async (method,user)=>{
      try {
           return await newUser.save()
      } catch (error) {
-          console.log(error)
+          console.error(error)
      }
 }

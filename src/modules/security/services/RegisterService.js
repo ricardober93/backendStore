@@ -12,7 +12,7 @@ import randomString from 'crypto-random-string'
  * @param {string} password
  * @return {object} 
  */
-const registerService = async (username, name, lastname, email, password) => {
+export const registerService = async (username, name, lastname, email, password) => {
     
     hashPassword = await bcrypt.hash( password, 12 )
 

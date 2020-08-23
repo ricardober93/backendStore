@@ -40,10 +40,6 @@ module.exports.authMethodAction = async function (req, res) {
 
         let authResult = await authMethodService(email, givenName, familyName, googleId)
         
-        if(authResult.status === false){
-            return res.status(403).send({message: authResult.msg});
-        }
-
         response.data = {"token": authResult.token, "user": authResult.user}
         return res.status(200).json(response);
     } catch (error) {
