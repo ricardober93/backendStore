@@ -2,33 +2,32 @@ import Role from '../models/RoleModel'
 import User from '../models/UserModel'
 import bcrypt from 'bcrypt'
 import randomString from 'crypto-random-string'
-
-exports.registerService = async (username, name, lastname, email, password, role) => {
+/**
+ *
+ *
+ * @param {string} username
+ * @param {string} name
+ * @param {string} lastname
+ * @param {string} email
+ * @param {string} password
+ * @return {object} 
+ */
+const registerService = async (username, name, lastname, email, password) => {
     
+    hashPassword = await bcrypt.hash( password, 12 )
+
+    const defaultRole = await Role.findOne({'name':'user'})
+
     const user = new User({
         username,
         name,
-        lastname
+        email,
+        lastname,
+        password: hashPassword,
+        role: defaultRole
     })
-    user.method = 'local'
-    user.email = email
-    user.password = password
 
-    user.password = await bcrypt.hash( password, 12 )
-
-    if(role){
-        const rolesAndPermissions = await Role.findOne({name: role.name})
-        user.role = rolesAndPermissions
-    } else{
-        const defaultRole = await Role.findOne({'name':'user'})
-        user.role = defaultRole
-    }
-
-    //Generate token active account
-    const tokenState = randomString({length:8,type:'numeric'})
-    user.tokenState = tokenState
-
-    let result = await user.save()
+    await user.save()
     
-    return result
+    return user
 }

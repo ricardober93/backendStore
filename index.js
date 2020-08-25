@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import express from 'express';
 //import SetupPassport from './src/modules/middleware/Passport'
-import {logger} from './src/modules/logger/logger';
+import { logger } from './src/modules/logger/logger';
 import { jwtAuth, handleAuthError } from './src/modules/security/middleware/auth';
 import rbacMiddleware from './src/modules/security/middleware/rbacMiddleware';
 import corsMiddleware from "./src/modules/middleware/corsMiddleware";
@@ -18,9 +18,13 @@ const db = process.env.MONGO_URI || 'mongodb://localhost/tienda'
 
 //Swagger
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocumentDev from './swagger.json';
+import swaggerSecurity from './swagger/auth.json';
+import swaggerCustomization from './swagger/customization.json';
+import swaggerMarket from './swagger/market.json';
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocumentDev));
+app.use('/api-auth', swaggerUi.serve, swaggerUi.setup(swaggerSecurity));
+app.use('/api-customization', swaggerUi.serve, swaggerUi.setup(swaggerCustomization));
+app.use('/api-market', swaggerUi.serve, swaggerUi.setup(swaggerMarket));
 
 app.use(function (err, req, res, next) {
     console.error(err.stack);

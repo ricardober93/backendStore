@@ -9,25 +9,33 @@ import {
     updateUserAction
 }  from "./controllers/UserControllers";
 import Role from "./controllers/RoleController";
-import {authAction, authMethodAction} from "./controllers/AuthController";
+import { authAction, authMethodAction } from "./controllers/AuthController";
+import { authToken } from '../middleware/auth'
+import {
+    signupActionMiddleware,
+    addUserActionMiddleware
+} from './middleware/requests/userMiddleware'
+import {
+    authActionMiddleware
+} from './middleware/requests/authMiddleware'
 
 //Users
 //Signup
-router.post('/signup', signup)
+router.post('/api/signup', signupActionMiddleware, signup)
 //Agregar un usuario
-router.post('/api/user', addUserAction);
+router.post('/api/user', [authToken, addUserActionMiddleware], addUserAction);
 //Encontrar un usuario
 router.get('/api/user/:id', getUserAction);
 //Actualizar un usuario
-router.put('/api/user/:id', updateUserAction);
+router.put('/api/user/:id', [authToken], updateUserAction);
 
 //Change password
-router.put('/api/user/password', updatePasswordUserAction);
+router.put('/api/user/password', [authToken], updatePasswordUserAction);
 //Luego ver porque es users y no user
-router.put('/api/users/password/:id' , updatePasswordAdminAction);
+router.put('/api/users/password/:id', [authToken], updatePasswordAdminAction);
 
 //AUTH
-router.post('/api/auth', authAction);
+router.post('/api/auth', authActionMiddleware, authAction);
 router.post('/api/auth-method', authMethodAction);
 
 /* //Dashboard TEST Authentication token
@@ -35,6 +43,6 @@ router.get("/profile", Auth.validateToken); */
 
 //Roles
 //Add role
-router.post("/role", Role.addRole);
+router.post("/api/role", Role.addRoleAction);
 
 export default router

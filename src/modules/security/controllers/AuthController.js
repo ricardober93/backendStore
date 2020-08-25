@@ -1,29 +1,30 @@
 import jsonwebtoken from "jsonwebtoken";
-import { logRequest } from '../../logger/logger'
+import { logRequest, logError } from '../../logger/logger'
 const { validationResult } = require('express-validator');
 import { authService, authMethodService } from '../services/AuthService'
+import {
+    createResponseFormat
+} from '../../../helpers/responseFormat'
+let response = createResponseFormat()
 
 module.exports.authAction = async function (req, res) {
 
     logRequest(req)
 
-    //Exec validations
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-        return res.status(400).json({message: errors.array()[0].msg})
-    }
-
     try {
         const authResult = await authService( req.body.email, req.body.password)
 
         if(authResult.status === false){
-            return res.status(403).send({message: authResult.msg});
+            response.message = authResult.msg
+            return res.status(403).send(message);
         }
 
-        return res.status(200).json({"token": authResult.token, "user": authResult.user});
+        response.data = {"token": authResult.token, "user": authResult.user}
+        return res.status(200).json(response);
     } catch (error) {
-        return res.status(500).json({"error": error});
+        response.errors.push(error)
+        logError(req, error);
+        return res.status(500).send(response)
     }
     
 
@@ -43,10 +44,12 @@ module.exports.authMethodAction = async function (req, res) {
             return res.status(403).send({message: authResult.msg});
         }
 
-        return res.status(200).json({"token": authResult.token, "user": authResult.user});
+        response.data = {"token": authResult.token, "user": authResult.user}
+        return res.status(200).json(response);
     } catch (error) {
-        console.log('error', error)
-        return res.status(500).json({"error": error});
+        response.errors.push(error)
+        logError(req, error);
+        return res.status(500).send(response)
     }
     
 

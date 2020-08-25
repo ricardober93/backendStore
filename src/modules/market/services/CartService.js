@@ -29,7 +29,7 @@ export async function addCart (products, total, total_discount = 0, user_id) {
     return cart;
 }
 
-export async function paymentMercadoPago (products, user_id, cart_id) {
+export async function paymentMercadoPago (products, form_mp, user_id, cart_id) {
 
     // Agrega credenciales
     mercadopago.configure({

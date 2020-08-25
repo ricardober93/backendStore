@@ -1,0 +1,524 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Documentando API con Swagger.",
+        "version": "0.1.0",
+        "title": "API Documentada"
+    },
+    "host": "localhost:8000",
+    "basePath": "/api",
+    "tags": [{
+            "name": "Auth",
+            "description": "Autenticacion del usuario"
+        },
+        {
+            "name": "Market",
+            "description": "Operaciones de productos y carritos"
+        }
+    ],
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "paths": {
+        "/auth": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Loguea al usuario y genera el Token",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [{
+                        "name": "email",
+                        "in": "formData",
+                        "description": "Correo electronico",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "formData",
+                        "description": "Contraseña",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Se logueo con exito, retorna el token"
+                    },
+                    "400": {
+                        "description": "La petición no fue exitosa o Los parametros son inconsistentes"
+                    },
+                    "500": {
+                        "description": "Error de servidor"
+                    }
+                }
+            }
+        },
+        "/auth-method": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Loguea al usuario y genera el Token",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [{
+                        "name": "token",
+                        "in": "formData",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "method",
+                        "in": "formData",
+                        "description": "Metodo de autenticacion",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Se logueo con exito, retorna el token"
+                    },
+                    "400": {
+                        "description": "La petición no fue exitosa o Los parametros son inconsistentes"
+                    },
+                    "500": {
+                        "description": "Error de servidor"
+                    }
+                }
+            }
+        },
+        "/categories": {
+            "get": {
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Retornar todos las categorias",
+                "description": "",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retorna todos las categorias"
+                    },
+                    "400": {
+                        "description": "La petición no fue exitosa o Los parametros son inconsistentes"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:user",
+                        "read:user"
+                    ]
+                }]
+            }
+        },
+        "/category": {
+            "post": {
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Registrar una Categoria",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [{
+                        "name": "name",
+                        "in": "formData",
+                        "description": "Nombre de Categoria",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "description",
+                        "in": "formData",
+                        "description": "Descripcion de Categoria",
+                        "type": "string"
+                    },
+                    {
+                        "name": "image_url",
+                        "in": "formData",
+                        "description": "Url de Imagen",
+                        "type": "string"
+                    },
+                    {
+                        "name": "featured",
+                        "in": "formData",
+                        "description": "Destacado",
+                        "required": true,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "state",
+                        "in": "formData",
+                        "description": "Estado",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Categoria registrado correctamente"
+                    },
+                    "400": {
+                        "description": "Error al registrar la categoria"
+                    }
+                }
+            }
+        },
+        "/category/{id}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Devuelve una categoria por ID",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "Id de categoria",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Se encontro la categoria con exito"
+                    },
+                    "404": {
+                        "description": "No hemos encontrado una categoria con ese ID"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:user",
+                        "read:user"
+                    ]
+                }]
+            },
+            "put": {
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Editar categoria por ID",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [{
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id de categoria",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "name",
+                        "in": "formData",
+                        "description": "Nombre de Categoria",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "description",
+                        "in": "formData",
+                        "description": "Descripcion de Categoria",
+                        "type": "string"
+                    },
+                    {
+                        "name": "image_url",
+                        "in": "formData",
+                        "description": "Url de Imagen",
+                        "type": "string"
+                    },
+                    {
+                        "name": "featured",
+                        "in": "formData",
+                        "description": "Destacado",
+                        "required": true,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "state",
+                        "in": "formData",
+                        "description": "Estado",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Se modifico la categoria con exito"
+                    },
+                    "400": {
+                        "description": "La petición no fue exitosa o la categoria con ese ID no existe"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:user",
+                        "read:user"
+                    ]
+                }]
+            }
+        },
+        "/carts": {
+            "get": {
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Retornar todos los carritos",
+                "description": "",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retorna todos los carritos"
+                    },
+                    "400": {
+                        "description": "La petición no fue exitosa o Los parametros son inconsistentes"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:user",
+                        "read:user"
+                    ]
+                }]
+            }
+        },
+        "/cart": {
+            "post": {
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Registrar una Carrito",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [{
+                        "name": "total_discount",
+                        "in": "formData",
+                        "description": "Descuento Total",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "total_price",
+                        "in": "formData",
+                        "description": "Precio Total",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "order_date",
+                        "in": "formData",
+                        "description": "Fecha de orden",
+                        "type": "date"
+                    },
+                    {
+                        "name": "state",
+                        "in": "formData",
+                        "description": "Estado",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user",
+                        "in": "formData",
+                        "description": "Usuario",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Carrito registrado correctamente"
+                    },
+                    "400": {
+                        "description": "Error al registrar el carrito"
+                    }
+                }
+            }
+        },
+        "/carts/user": {
+            "get": {
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Devuelve los carritos del usuario autenticado",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Se encontro el carrito con exito"
+                    },
+                    "404": {
+                        "description": "No hemos encontrado un carrito con ese ID"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:user",
+                        "read:user"
+                    ]
+                }]
+            }
+        },
+        "/cart/{id}": {
+            "get": {
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Devuelve un carrito por ID",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "Id de carrito",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Se encontro el carrito con exito"
+                    },
+                    "404": {
+                        "description": "No hemos encontrado un carrito con ese ID"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:user",
+                        "read:user"
+                    ]
+                }]
+            },
+            "put": {
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Editar carrito por ID",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [{
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id de carrito",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "total_discount",
+                        "in": "formData",
+                        "description": "Descuento Total",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "total_price",
+                        "in": "formData",
+                        "description": "Precio Total",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "order_date",
+                        "in": "formData",
+                        "description": "Fecha de orden",
+                        "type": "date"
+                    },
+                    {
+                        "name": "state",
+                        "in": "formData",
+                        "description": "Estado",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user",
+                        "in": "formData",
+                        "description": "Usuario",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Se modifico el carrito con exito"
+                    },
+                    "400": {
+                        "description": "La petición no fue exitosa o el carrito con ese ID no existe"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:user",
+                        "read:user"
+                    ]
+                }]
+            }
+        }
+    },
+    "securityDefinitions": {
+        "auth_token": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "externalDocs": {
+        "description": "Find out more about Swagger",
+        "url": "http://swagger.io"
+    }
+}
