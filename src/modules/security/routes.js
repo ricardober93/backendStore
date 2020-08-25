@@ -27,7 +27,7 @@ router.post('/api/user', [authToken, addUserActionMiddleware], addUserAction);
 //Encontrar un usuario
 router.get('/api/user/:id', getUserAction);
 //Actualizar un usuario
-router.put('/api/user/:id', [authToken], updateUserAction);
+router.put('/api/user/:id', authToken, updateUserAction);
 
 //Change password
 router.put('/api/user/password', [authToken], updatePasswordUserAction);
@@ -35,7 +35,7 @@ router.put('/api/user/password', [authToken], updatePasswordUserAction);
 router.put('/api/users/password/:id', [authToken], updatePasswordAdminAction);
 
 //AUTH
-router.post('/api/auth', authActionMiddleware, authAction);
+router.post('/api/auth', authAction);
 router.post('/api/auth-method', authMethodAction);
 
 /* //Dashboard TEST Authentication token

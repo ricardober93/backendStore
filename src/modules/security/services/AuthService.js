@@ -9,7 +9,7 @@ import {
 function generateToken(user, roleName){
     let token = jsonwebtoken.sign(
         {
-            id: user.id,
+            _id: user.id,
             name: user.name,
             lastname: user.lastname,
             ddi: user.ddi,
@@ -31,7 +31,7 @@ function generateToken(user, roleName){
  * @param {string} password
  * @return {object} 
  */
-const authService = async function (email, password) {
+export const authService = async function (email, password) {
     
     const user = await User.findOne({email: email}).populate('role')
 
@@ -63,7 +63,7 @@ const authService = async function (email, password) {
  * @param {string} google_id
  * @return {object} 
  */
-const authMethodService = async function (email, name, lastname, google_id) {
+export const authMethodService = async function (email, name, lastname, google_id) {
 
     let user = await User.findOne({ email: email }).populate('role')
 

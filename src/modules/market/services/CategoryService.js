@@ -50,7 +50,7 @@ export async function updateCategory (id,name,descrition,image_url,featured,stat
        throw new Error('La categoria con ese ID no esta')
     }
 
-    const categoryUpdate = await User.findById(id)
+    const categoryUpdate = await Category.findById(id)
 
     if(!categoryUpdate){
         throw new Error('Hubo un error al encontrar la categoria')

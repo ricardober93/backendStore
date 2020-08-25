@@ -40,7 +40,14 @@ export async function updatePasswordUserService (id, currentPassword, newPasswor
 
     return userUpdate;
 }
-
+/**
+ * updatePasswordAdmin
+ *
+ * @export
+ * @param {string} id
+ * @param {string} password
+ * @return {object} 
+ */
 export async function updatePasswordAdmin (id, password) {
     let salt = bcryptjs.genSaltSync(10);
     let hashPassword = bcryptjs.hashSync(password, salt);
