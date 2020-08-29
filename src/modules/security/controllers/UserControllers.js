@@ -30,7 +30,7 @@ exports.signup = async (req,res,next) => {
 
     const { name, lastname, email, password } = req.body;
 
-    const username = `${req.body.name}${shortid.generate()}`
+    const username = `${name}${shortid.generate()}`
 
     try {
         const user = await registerService(username, name, lastname, email, password)
@@ -130,20 +130,28 @@ module.exports.getUserAction = async function (req, res) {
 
 module.exports.updateUserAction = async function (req, res) {
 
+    logRequest(req)
+
     const errors = validationResult(req);
+
+    const { username, name, lastname, email, phone, address, latitude, longitude } = req.body
 
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array()});
     }
 
     try{
-        const userUpdate = await updateUser(req.params.id, req.body.username,
-        req.body.name, req.body.lastname, req.body.email, req.body.phone, req.body.address,
-        req.body.latitude, req.body.longitude);
-        res.status(200).send(userUpdate)
+        const userUpdate = await updateUser(req.params.id, username,
+        name, lastname, email, phone, address,
+        latitude, longitude);
+        
+        response.message = 'User updated success'
+        res.status(200).send(userUpdate);
     }
     catch(error){
-        res.status(400).send({ error:error.message }) 
+        response.errors.push(error);
+        logError(req, error);
+        res.status(400).send({ error:error.message });
     }
 
 }
