@@ -39,6 +39,31 @@ export async function paymentMercadoPago (products, form_mp, user_id, cart_id) {
     let items = []
     let cartUpdate;
 
+    var customer_data = { "email": "test@test.com" }
+
+    await mercadopago.customers.create(customer_data).then(function (customer) {
+    
+      var card_data = {
+        "token": "9b2d63e00d66a8c721607214cedaecda",
+        "customer": user_id
+      }
+    
+      mercadopago.cards.create(card_data).then(function (card) {
+        console.log(card);
+      });
+
+    })
+    /* await mercadopago.createToken(form_mp, async function(status, response) {
+        console.log('response',response)
+        if (status != 200 && status != 201) {
+            /* const errors = document.getElementById("paymentsErrors");
+            errors.textContent = response.cause[0].description;
+        } else {
+            form_mp.cardToken = response.id;
+            form_mp.submit();
+        }
+    }); */
+
     products.map( product => {
         let item = {
             id: product._id,
@@ -53,7 +78,7 @@ export async function paymentMercadoPago (products, form_mp, user_id, cart_id) {
     // Crea un objeto de preferencia
     let preference = {
         items: items
-    };
+    }
     
     await mercadopago.preferences.create(preference)
     .then( async function(response){

@@ -20,7 +20,8 @@ import {
     updateCartAction
 } from './controllers/CartController'
 import {
-    getProductsAction, 
+    getProductsAction,
+    getProductsBySearchAction, 
     getProductAction,
     createProductAction,
     editProductAction,
@@ -64,6 +65,8 @@ router.put('/api/cart/:id', updateCartAction);
 //PRODUCT
 //Retorna todas los productos
 router.get('/api/products', getProductsAction);
+//Retorna todas los productos por palabra
+router.get('/api/products/:search', getProductsBySearchAction);
 //Retorna un producto por id
 router.get('/api/product/:id', getProductAction);
 //Agregar un producto
