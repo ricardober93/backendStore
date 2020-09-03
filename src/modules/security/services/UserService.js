@@ -16,8 +16,9 @@ import {
  * @return {object} 
  */
 export async function updatePasswordUserService (id, currentPassword, newPassword) {
-    
+    console.log('id', id)
     let user = await User.findById(id)
+    console.log(user);
 
     if(!user){
         throw (MessageResponse.notFound())
@@ -142,6 +143,32 @@ export async function updateUser (id, username, name, lastname, email, phone, ad
         address,
         latitude: latitude,
         longitude: longitude
+    }) 
+
+    if(!user){
+       throw new Error('El usuario con ese ID no esta')
+    }
+
+    const userUpdate = await User.findById(id).populate('role')
+
+    if(!userUpdate){
+        throw new Error('Hubo un error al encontrar al usuario')
+    }
+
+    return userUpdate;
+}
+/**
+ *
+ *
+ * @export
+ * @param {string} id
+ * @param {string} address
+ * @return {object} 
+ */
+export async function updateAddressService (id, address)  {
+
+    const user = await User.findByIdAndUpdate(id, {
+        address
     }) 
 
     if(!user){

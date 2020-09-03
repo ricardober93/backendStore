@@ -10,6 +10,7 @@ const {
     MessageValidator
  } from '../../../../helpers/messageValidator';
  import { MessageResponse } from '../../../../helpers/messageResponse';
+ import bcryptjs from 'bcryptjs';
  
  export const authActionMiddleware = requestValidate([
  
@@ -21,7 +22,18 @@ const {
           max: 50
        })
        .withMessage(MessageValidator.betweenLength('email', 5, 50))
-       .isEmail(),
+       .isEmail()
+       .bail()
+       .custom(async (email, req) => {
+         const body = req.req.body;
+         const user = await User.findOne({
+            email: body.email
+         })
+         
+         if (!user) {
+            return Promise.reject('El email no existe');
+         }
+      }),
  
     check('password')
        .exists()
@@ -30,5 +42,16 @@ const {
           min: 6
        })
        .withMessage(MessageValidator.minLength('password', 6))
+       .bail()
+       .custom(async (email, req) => {
+         const body = req.req.body;
+         const user = await User.findOne({
+            email: body.email
+         })
+         const validPassword = bcryptjs.compareSync(body.password, user.password);
+         if (!validPassword) {
+            return Promise.reject('The email or password is invalid');
+         }
+      })
  
  ]);

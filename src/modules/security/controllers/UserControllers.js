@@ -9,7 +9,8 @@ import {
     updatePasswordAdmin,
     addUserService,
     getUser,
-    updateUser
+    updateUser,
+    updateAddressService
 } from '../services/UserService';
 import { validationResult } from "express-validator";
 import { registerService }  from '../services/RegisterService'
@@ -144,6 +145,27 @@ module.exports.updateUserAction = async function (req, res) {
         const userUpdate = await updateUser(req.params.id, username,
         name, lastname, email, phone, address,
         latitude, longitude);
+        
+        response.message = 'User updated success'
+        res.status(200).send(userUpdate);
+    }
+    catch(error){
+        response.errors.push(error);
+        logError(req, error);
+        res.status(400).send({ error:error.message });
+    }
+
+}
+
+module.exports.updateAddressAction = async function (req, res) {
+
+    logRequest(req)
+
+    const { address } = req.body;
+    console.log(req.user);
+
+    try{
+        const userUpdate = await updateAddressService(req.user._id, address);
         
         response.message = 'User updated success'
         res.status(200).send(userUpdate);
