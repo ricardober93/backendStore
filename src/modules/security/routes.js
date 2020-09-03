@@ -6,7 +6,8 @@ import {
     updatePasswordAdminAction, 
     addUserAction, 
     getUserAction, 
-    updateUserAction
+    updateUserAction,
+    updateAddressAction
 }  from "./controllers/UserControllers";
 import Role from "./controllers/RoleController";
 import { authAction, authMethodAction } from "./controllers/AuthController";
@@ -29,6 +30,8 @@ router.get('/api/user/:id', getUserAction);
 //Actualizar un usuario
 router.put('/api/user/:id', authToken, updateUserAction);
 
+// Actualizar direccion del usuario
+router.put('/api/user/address', updateAddressAction);
 //Change password
 router.put('/api/user/password', [authToken], updatePasswordUserAction);
 //Luego ver porque es users y no user
