@@ -1,6 +1,9 @@
 import Product from "../models/ProductModel";
 import Brand from "../models/BrandModel";
 import Category from "../models/CategoryModel";
+import {
+    MessageResponse
+} from "../../../helpers/messageResponse";
 
 exports.createProduct = async (
   name,
@@ -86,4 +89,18 @@ exports.updateProduct = async (
 exports.deleteProduct = async (id) => {
   const result = await Product.findByIdAndRemove(id);
   return result;
+}
+
+export async function getProductsBySearchService (search) {
+ 
+  let products = await Product.find().populate(['category', 'brand'])
+
+  products = await products.filter(product => product.name.toLowerCase().indexOf(search) !== -1)
+          
+  if(!products){
+    throw (MessageResponse.notFound())
+  }
+
+  return products
+
 }

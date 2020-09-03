@@ -293,6 +293,71 @@
                 }]
             }
         },
+        "/products": {
+            "get": {
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Retornar todos los productos",
+                "description": "",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retorna todos los productos"
+                    },
+                    "400": {
+                        "description": "La petición no fue exitosa o Los parametros son inconsistentes"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:user",
+                        "read:user"
+                    ]
+                }]
+            }
+        },
+        "/products/{search}": {
+            "get": {
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Retornar todos los productos",
+                "description": "",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],"parameters": [{
+                    "name": "search",
+                    "in": "path",
+                    "description": "Busqueda",
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Retorna todos los productos"
+                    },
+                    "400": {
+                        "description": "La petición no fue exitosa o Los parametros son inconsistentes"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:user",
+                        "read:user"
+                    ]
+                }]
+            }
+        },
         "/carts": {
             "get": {
                 "tags": [

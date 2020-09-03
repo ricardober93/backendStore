@@ -1,7 +1,7 @@
 import Product from "../models/ProductModel";
 import Brand from "../models/BrandModel";
 import { logRequest } from '../../logger/logger';
-import { createProduct, updateProduct, deleteProduct } from '../services/ProductService'
+import { createProduct, updateProduct, deleteProduct, getProductsBySearchService } from '../services/ProductService'
 
 // obtener todos los productos
 exports.getProductsAction = async (req, res, next) => {
@@ -159,5 +159,27 @@ exports.deleteProductAction = async (req, res, next) => {
   } catch (error) {
     res.status(500).json(error);
     next();
+  }
+};
+
+// obtener todos los productos por busqueda
+exports.getProductsBySearchAction = async (req, res, next) => {
+
+  logRequest(req)
+
+  let response = {
+    errors: [],
+    message: "",
+    data: {},
+  };
+
+  try {
+    const products = await getProductsBySearchService(req.params.search);
+    
+    response.data = products;
+    return res.status(200).json(response);
+  } catch (error) {
+    response.message = error;
+    return res.status(500).json(response);
   }
 };
