@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt'
 import shortid from 'shortid'
 import jwt from 'jsonwebtoken'
 import { logRequest, logError } from '../../logger/logger';
-import {   
+import {
     updatePasswordUserService,
     updatePasswordAdmin,
     addUserService,
@@ -13,7 +13,7 @@ import {
     updateAddressService
 } from '../services/UserService';
 import { validationResult } from "express-validator";
-import { registerService }  from '../services/RegisterService'
+import { registerService } from '../services/RegisterService'
 import mail from '../../middleware/nodemailer'
 import templates from '../utils/templatesMail'
 import {
@@ -25,8 +25,8 @@ import {
 let response = createResponseFormat()
 
 //Register
-exports.signup = async (req,res,next) => {
-    
+exports.signup = async (req, res, next) => {
+
     logRequest(req)
 
     const { name, lastname, email, password } = req.body;
@@ -38,7 +38,7 @@ exports.signup = async (req,res,next) => {
 
         const html = templates.verifyUser(user.tokenState, user.name, 'http://localhost:8000')
 
-        await mail.sendMail('noreply@test.com',user.email,'Verify User',html)
+        await mail.sendMail('noreply@test.com', user.email, 'Verify User', html)
 
         response.message = MessageResponse.registerSuccess()
         res.status(200).json(response)
@@ -80,7 +80,7 @@ module.exports.updatePasswordAdminAction = async function (req, res) {
     }]
 
     const errors = validationResult(req);
-    
+
     if (!errors.isEmpty()) {
         response[0].errors = errors.array()
         response[0].message = 'La petición no fue exitosa'
@@ -102,12 +102,12 @@ module.exports.addUserAction = async function (req, res) {
 
     logRequest(req)
 
-    let { name, username, email, password, address, 
+    let { name, username, email, password, address,
         latitude, longitude, role, state } = req.body
     try {
-        const user = await addUserService(name, username, email, password, address, 
+        const user = await addUserService(name, username, email, password, address,
             latitude, longitude, role, state);
-    
+
         response.data = user
         res.status(201).send(response)
     } catch (error) {
@@ -115,7 +115,7 @@ module.exports.addUserAction = async function (req, res) {
         logError(req, error);
         return res.status(500).send(response)
     }
-    
+
 
 }
 
@@ -138,21 +138,21 @@ module.exports.updateUserAction = async function (req, res) {
     const { username, name, lastname, email, phone, address, latitude, longitude } = req.body
 
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array()});
+        return res.status(400).json({ errors: errors.array() });
     }
 
-    try{
+    try {
         const userUpdate = await updateUser(req.params.id, username,
-        name, lastname, email, phone, address,
-        latitude, longitude);
-        
+            name, lastname, email, phone, address,
+            latitude, longitude);
+
         response.message = 'User updated success'
         res.status(200).send(userUpdate);
     }
-    catch(error){
+    catch (error) {
         response.errors.push(error);
         logError(req, error);
-        res.status(400).send({ error:error.message });
+        res.status(400).send({ error: error.message });
     }
 
 }
@@ -162,18 +162,17 @@ module.exports.updateAddressAction = async function (req, res) {
     logRequest(req)
 
     const { address } = req.body;
-    console.log(req.user);
 
-    try{
+    try {
         const userUpdate = await updateAddressService(req.user._id, address);
-        
+
         response.message = 'User updated success'
         res.status(200).send(userUpdate);
     }
-    catch(error){
+    catch (error) {
         response.errors.push(error);
         logError(req, error);
-        res.status(400).send({ error:error.message });
+        res.status(400).send({ error: error.message });
     }
 
 }

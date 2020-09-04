@@ -15,18 +15,17 @@ import {
  * @param {string} newPassword
  * @return {object} 
  */
-export async function updatePasswordUserService (id, currentPassword, newPassword) {
-    console.log('id', id)
-    let user = await User.findById(id)
-    console.log(user);
+export async function updatePasswordUserService(id, currentPassword, newPassword) {
 
-    if(!user){
+    let user = await User.findById(id)
+
+    if (!user) {
         throw (MessageResponse.notFound())
     }
-    
+
     //Valido si la contraseña actual coincide con la almacenada en la DB
     const validPassword = bcryptjs.compareSync(currentPassword, user.password)
-    
+
     if (!validPassword) {
         throw new InvalidPasswordError()
     }
@@ -49,11 +48,11 @@ export async function updatePasswordUserService (id, currentPassword, newPasswor
  * @param {string} password
  * @return {object} 
  */
-export async function updatePasswordAdmin (id, password) {
+export async function updatePasswordAdmin(id, password) {
     let salt = bcryptjs.genSaltSync(10);
     let hashPassword = bcryptjs.hashSync(password, salt);
 
-    const user = await User.findByIdAndUpdate(id,{
+    const user = await User.findByIdAndUpdate(id, {
         password: hashPassword,
     })
 
@@ -77,11 +76,11 @@ export async function updatePasswordAdmin (id, password) {
  * @param {boolean} state
  * @return {object} 
  */
-export async function addUserService (name, username, email, password, address, latitude, longitude, role, state) {
+export async function addUserService(name, username, email, password, address, latitude, longitude, role, state) {
 
     let salt = bcryptjs.genSaltSync(10);
     let hashPassword = bcryptjs.hashSync(password, salt);
-    let newRole = await Role.findOne({"name": role})
+    let newRole = await Role.findOne({ "name": role })
 
     const user = new User({
         name,
@@ -96,7 +95,7 @@ export async function addUserService (name, username, email, password, address, 
     });
     user.id = user._id;
     await user.save()
-    
+
     return user;
 }
 /**
@@ -106,13 +105,13 @@ export async function addUserService (name, username, email, password, address, 
  * @param {string} id
  * @return {object} 
  */
-export async function getUser (id) {
-    
+export async function getUser(id) {
+
     const user = await User.findById(id)
 
-    if(!user){
+    if (!user) {
         throw new Error('El usuario con ese ID no esta')
-    }  
+    }
 
     return user;
 }
@@ -132,7 +131,7 @@ export async function getUser (id) {
  * @param {string} longitude
  * @return {object} 
  */
-export async function updateUser (id, username, name, lastname, email, phone, address, latitude, longitude)  {
+export async function updateUser(id, username, name, lastname, email, phone, address, latitude, longitude) {
 
     const user = await User.findByIdAndUpdate(id, {
         username,
@@ -143,15 +142,15 @@ export async function updateUser (id, username, name, lastname, email, phone, ad
         address,
         latitude: latitude,
         longitude: longitude
-    }) 
+    })
 
-    if(!user){
-       throw new Error('El usuario con ese ID no esta')
+    if (!user) {
+        throw new Error('El usuario con ese ID no esta')
     }
 
     const userUpdate = await User.findById(id).populate('role')
 
-    if(!userUpdate){
+    if (!userUpdate) {
         throw new Error('Hubo un error al encontrar al usuario')
     }
 
@@ -165,19 +164,19 @@ export async function updateUser (id, username, name, lastname, email, phone, ad
  * @param {string} address
  * @return {object} 
  */
-export async function updateAddressService (id, address)  {
+export async function updateAddressService(id, address) {
 
     const user = await User.findByIdAndUpdate(id, {
         address
-    }) 
+    })
 
-    if(!user){
-       throw new Error('El usuario con ese ID no esta')
+    if (!user) {
+        throw new Error('El usuario con ese ID no esta')
     }
 
     const userUpdate = await User.findById(id).populate('role')
 
-    if(!userUpdate){
+    if (!userUpdate) {
         throw new Error('Hubo un error al encontrar al usuario')
     }
 

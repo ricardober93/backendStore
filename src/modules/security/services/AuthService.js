@@ -6,7 +6,7 @@ import {
     MessageResponse
 } from "../../../helpers/messageResponse";
 
-function generateToken(user, roleName){
+function generateToken(user, roleName) {
     let token = jsonwebtoken.sign(
         {
             _id: user.id,
@@ -15,9 +15,10 @@ function generateToken(user, roleName){
             ddi: user.ddi,
             ddn: user.ddn,
             phone: user.phone,
+            google_id: user.google_id ? user.google_id : null,
             email: user.email,
-            role: {name: roleName},
-            avatar:process.env.URL_BACKEND+'/'+user.avatar
+            role: { name: roleName },
+            avatar: process.env.URL_BACKEND + '/' + user.avatar
         },
         process.env.JWT_SECRET,
         { expiresIn: '10d' }
@@ -32,19 +33,19 @@ function generateToken(user, roleName){
  * @return {object} 
  */
 export const authService = async function (email, password) {
-    
-    const user = await User.findOne({email: email}).populate('role')
 
-    if(!user) {
+    const user = await User.findOne({ email: email }).populate('role')
+
+    if (!user) {
         throw (MessageResponse.notFound())
     }
 
-    if(user.state === false){
+    if (user.state === false) {
         throw ('Disabled user');
     }
 
     const validPassword = bcryptjs.compareSync(password, user.password)
-    
+
     if (!validPassword) {
         throw (MessageResponse.unauthorized())
     }
@@ -67,21 +68,21 @@ export const authMethodService = async function (email, name, lastname, google_i
 
     let user = await User.findOne({ email: email }).populate('role')
 
-    if(user){
-        if(user.state === false){
+    if (user) {
+        if (user.state === false) {
             throw ('Disabled user');
         }
-        
+
         const token = generateToken(user, user.role.name)
-    
-        return { status:true, user, token }
-        
+
+        return { status: true, user, token }
+
     } else {
-        
-        const role = await Role.findOne({name: 'user'})
+
+        const role = await Role.findOne({ name: 'user' })
 
         let newUser = new User({
-            username: name+google_id,
+            username: name + google_id,
             name,
             lastname,
             email,
@@ -94,8 +95,8 @@ export const authMethodService = async function (email, name, lastname, google_i
         await newUser.save()
 
         const token = generateToken(newUser, role.name)
-    
-        return { status:true, user: newUser, token}
+
+        return { status: true, user: newUser, token }
     }
 
 }

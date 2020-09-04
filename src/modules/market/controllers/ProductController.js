@@ -29,7 +29,7 @@ exports.getProductsAction = async (req, res, next) => {
 
 // obtener un solo producto
 exports.getProductAction = async (req, res, next) => {
-  
+
   logRequest(req)
 
   const id = req.params.id;
@@ -38,7 +38,7 @@ exports.getProductAction = async (req, res, next) => {
     msg: "",
     data: {},
   };
-  
+
   try {
     const product = await Product.findById(id).populate('brand').populate('category');
     response.msg = "get Product";
@@ -81,11 +81,11 @@ exports.createProductAction = async (req, res, next) => {
 
   try {
 
-      let product = await createProduct(name, description, price, featured, image_preview, image, raiting, SKU, stock, brand_id, category_id, state, publish)
-      response.msg = 'Product created succesfuly'
-      response.data = product
-      res.status(200).json(response)
- 
+    let product = await createProduct(name, description, price, featured, image_preview, image, raiting, SKU, stock, brand_id, category_id, state, publish)
+    response.msg = 'Product created succesfuly'
+    response.data = product
+    res.status(200).json(response)
+
   } catch (error) {
     response.errors = true
     response.msg = error
@@ -132,7 +132,7 @@ exports.editProductAction = async (req, res, next) => {
     response.data = editProduct
     res.status(200).json(response)
   } catch (error) {
-    console.log(error)
+    console.error(error)
     response.errors = error;
     response.msg = error;
     res.status(500).json(response);
@@ -175,7 +175,7 @@ exports.getProductsBySearchAction = async (req, res, next) => {
 
   try {
     const products = await getProductsBySearchService(req.params.search);
-    
+
     response.data = products;
     return res.status(200).json(response);
   } catch (error) {
