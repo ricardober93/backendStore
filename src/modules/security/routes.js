@@ -6,7 +6,8 @@ import {
     updatePasswordAdminAction, 
     addUserAction, 
     getUserAction, 
-    updateUserAction
+    updateUserAction,
+    updateAddressAction
 }  from "./controllers/UserControllers";
 import Role from "./controllers/RoleController";
 import { authAction, authMethodAction } from "./controllers/AuthController";
@@ -24,18 +25,19 @@ import {
 router.post('/api/signup', signupActionMiddleware, signup)
 //Agregar un usuario
 router.post('/api/user', [authToken, addUserActionMiddleware], addUserAction);
+// Actualizar direccion del usuario
+router.put('/api/user/address', authToken, updateAddressAction);
+//Change password
+router.put('/api/user/password', [authToken], updatePasswordUserAction);
+//Luego ver porque es users y no user
+router.put('/api/users/password/:id', [authToken], updatePasswordAdminAction);
 //Encontrar un usuario
 router.get('/api/user/:id', getUserAction);
 //Actualizar un usuario
 router.put('/api/user/:id', authToken, updateUserAction);
 
-//Change password
-router.put('/api/user/password', [authToken], updatePasswordUserAction);
-//Luego ver porque es users y no user
-router.put('/api/users/password/:id', [authToken], updatePasswordAdminAction);
-
 //AUTH
-router.post('/api/auth', authAction);
+router.post('/api/auth', authActionMiddleware, authAction);
 router.post('/api/auth-method', authMethodAction);
 
 /* //Dashboard TEST Authentication token

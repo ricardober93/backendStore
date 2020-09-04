@@ -9,7 +9,17 @@ export async function readCategories () {
     return categories
 
 }
-
+/**
+ *
+ *
+ * @export
+ * @param {string} name
+ * @param {string} descrition
+ * @param {string} image_url
+ * @param {string} featured
+ * @param {boolean} state
+ * @return {object} 
+ */
 export async function addCategory (name,descrition,image_url,featured,state) {
 
     const category = new Category({
@@ -24,7 +34,13 @@ export async function addCategory (name,descrition,image_url,featured,state) {
     await category.save()
     return category;
 }
-
+/**
+ *
+ *
+ * @export
+ * @param {string} id
+ * @return {*} 
+ */
 export async function getCategory (id) {
     
     const category = await Category.findById(id)
@@ -35,7 +51,18 @@ export async function getCategory (id) {
 
     return category;
 }
-
+/**
+ *
+ *
+ * @export
+ * @param {string} id
+ * @param {string} name
+ * @param {string} descrition
+ * @param {string} image_url
+ * @param {string} featured
+ * @param {boolean} state
+ * @return {object} 
+ */
 export async function updateCategory (id,name,descrition,image_url,featured,state)  {
 
     const category = await Category.findByIdAndUpdate(id, {

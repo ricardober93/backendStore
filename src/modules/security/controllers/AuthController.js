@@ -35,12 +35,15 @@ module.exports.authMethodAction = async function (req, res) {
     logRequest(req)
 
     let { email, givenName, familyName, googleId } = req.body;
+    console.log('Body', req.body);
 
     try {
 
         let authResult = await authMethodService(email, givenName, familyName, googleId)
         
+        
         response.data = {"token": authResult.token, "user": authResult.user}
+        console.log(response);
         return res.status(200).json(response);
     } catch (error) {
         response.errors.push(error)

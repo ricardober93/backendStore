@@ -9,7 +9,7 @@ export const requestValidate = validations => {
     if (errors.isEmpty()) {
       return next();
     }
-    res.status(400).json({
+    res.status(422).json({
       errors: errors.array()
     });
   }

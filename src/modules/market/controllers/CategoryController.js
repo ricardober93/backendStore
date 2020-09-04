@@ -6,16 +6,18 @@ import {
     updateCategory
 } from '../services/CategoryService';
 import { validationResult } from "express-validator";
+import {
+    createResponseFormat
+} from '../../../helpers/responseFormat'
+import {
+    MessageResponse
+} from '../../../helpers/messageResponse'
+let response = createResponseFormat()
+
 
 module.exports.readCategoriesAction = async function (req, res) {
 
     logRequest(req)
-
-    let response = {
-        errors: [],
-        msg: '',
-        data: {},
-    }
 
     /* if (!req.user) {
         response.msg = 'No autorizado'
@@ -24,11 +26,12 @@ module.exports.readCategoriesAction = async function (req, res) {
 
     const categories = await readCategories();
     
-    if (categories) {
+    try {
         response.data = categories
         return res.status(200).json(response);
-    } else {
-        response.errors.push(true)
+    } catch (error) {
+        response.errors.push(error)
+        logError(req, error);
         return res.status(500).send(response)
     }
 }
@@ -39,25 +42,25 @@ module.exports.addCategoryAction = async function (req, res) {
 
     const { name, description, image_url, featured, state } = req.body;
 
-    let response = {
-        errors: [],
-        msg: '',
-        data: {},
-    }
-    
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
         response.errors = errors.array()
-        response.msg = 'La petición no fue exitosa'
+        response.message = 'La petición no fue exitosa'
         res.status(400).json(response) 
     }
     
-    const category = await addCategory(name, description, image_url, featured, state);
-    const result = await category.save();
+    try {
+        const category = await addCategory(name, description, image_url, featured, state);
+        const result = await category.save();
 
-    response.data = result
-    res.status(201).json(response)
+        response.data = result
+        res.status(201).json(response)
+    } catch (error) {
+        response.errors.push(error)
+        logError(req, error);
+        return res.status(500).send(response)
+    }
 
 }
 
@@ -65,22 +68,26 @@ module.exports.getCategoryAction = async function (req, res) {
 
     logRequest(req)
 
-    let response = {
+    /*let response = {
         errors: [],
         msg: '',
         data: {},
-    }
+    }*/
 
     const category = await getCategory(req.params.id);
 
-    if (!category){
+    /*if (!category){
         response.msg = 'No hemos encontrado un usuario con ese ID'
         return res.status(404).json(response);
+    }*/
+    try {
+        response.data = category;
+        res.status(200).json(response);
+    } catch (error) {
+        response.errors.push(error)
+        logError(req, error);
+        return res.status(400).send(response)
     }
-
-    response.data = category
-    res.json(response)
-
 }
 
 module.exports.updateCategoryAction = async function (req, res) {
@@ -89,21 +96,15 @@ module.exports.updateCategoryAction = async function (req, res) {
     
     const { name, description, image_url, featured, state } = req.body;
 
-    let response = {
-        errors: [],
-        msg: '',
-        data: {},
-    }
-
     try{
         const categoryUpdate = await updateCategory(req.params.id, name, description, image_url, featured, state);
         response.data = categoryUpdate
         res.status(200).json(response)
     }
     catch(error){
-        console.log(error)
-        response.msg = error.message
-        res.status(500).json(response) 
+        response.errors.push(error)
+        logError(req, error);
+        return res.status(500).send(response)
     }
 
 }
