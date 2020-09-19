@@ -1,14 +1,10 @@
 import Role from '../models/RoleModel'
 import { logRequest, logError } from '../../logger/logger'
 import { addRoleService } from '../services/RoleService'
-import {
-    createResponseFormat
-} from '../../../helpers/responseFormat'
-let response = createResponseFormat()
 
-exports.addRoleAction = async (req,res,next) => {
-    
-    logRequest(req)
+exports.addRoleAction = async (req, res, next) => {
+
+    let response = logRequest(req)
 
     const { name, permissions } = req.body;
 

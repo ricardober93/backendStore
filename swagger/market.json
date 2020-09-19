@@ -323,6 +323,36 @@
                 }]
             }
         },
+        "/products/random": {
+            "get": {
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Retornar productos de forma random",
+                "description": "",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retorno productos de forma random"
+                    },
+                    "400": {
+                        "description": "La petición no fue exitosa o Los parametros son inconsistentes"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:user",
+                        "read:user"
+                    ]
+                }]
+            }
+        },
         "/products/{search}": {
             "get": {
                 "tags": [
@@ -333,7 +363,8 @@
                 "produces": [
                     "application/json",
                     "application/xml"
-                ],"parameters": [{
+                ],
+                "parameters": [{
                     "name": "search",
                     "in": "path",
                     "description": "Busqueda",

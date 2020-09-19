@@ -1,4 +1,10 @@
 import Role from "../models/RoleModel";
+import {
+    logError
+} from '../../logger/logger'
+import {
+    MessageResponse
+} from '../../../helpers/messageResponse'
 /**
  * addRoleService
  *
@@ -7,11 +13,15 @@ import Role from "../models/RoleModel";
  * @return {object} 
  */
 export const addRoleService = async function (name, permissions) {
-    
-    const role = new Role({name, permissions})
+    try {
+        const role = new Role({ name, permissions })
 
-    await role.save()
+        await role.save()
 
-    return role
+        return role
+    } catch (error) {
+        logError('addRoleService', error)
+        throw (MessageResponse.serviceCatch(error))
+    }
 
 }

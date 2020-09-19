@@ -19,7 +19,7 @@ export async function addCart(products, total, total_discount = 0, user_id) {
         total_price: total,
         total_discount: total_discount,
         order_date: Date.now(),
-        state: 'pending',
+        state: 'Pendiente',
         user: user ? user : null,
     });
 

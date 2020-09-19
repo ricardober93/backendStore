@@ -1,19 +1,19 @@
 //const express = require('express');
 import express from 'express'
 import {
-    readCategoriesAction, 
+    readCategoriesAction,
     addCategoryAction,
     getCategoryAction,
     updateCategoryAction
 } from './controllers/CategoryController'
 import {
-    readBrandsAction, 
+    readBrandsAction,
     addBrandAction,
     getBrandAction,
     updateBrandAction
 } from './controllers/BrandController'
 import {
-    readCartsAction, 
+    readCartsAction,
     addCartAction,
     getCartAction,
     getCartByUserAction,
@@ -21,7 +21,8 @@ import {
 } from './controllers/CartController'
 import {
     getProductsAction,
-    getProductsBySearchAction, 
+    getProductsRandomAction,
+    getProductsBySearchAction,
     getProductAction,
     createProductAction,
     editProductAction,
@@ -65,6 +66,8 @@ router.put('/api/cart/:id', updateCartAction);
 //PRODUCT
 //Retorna todas los productos
 router.get('/api/products', getProductsAction);
+//Retorna todas los productos
+router.get('/api/products/random', getProductsRandomAction);
 //Retorna todas los productos por palabra
 router.get('/api/products/:search', getProductsBySearchAction);
 //Retorna un producto por id

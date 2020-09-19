@@ -2,6 +2,12 @@ import Role from '../models/RoleModel'
 import User from '../models/UserModel'
 import bcrypt from 'bcrypt'
 import randomString from 'crypto-random-string'
+import {
+    logError
+} from '../../logger/logger'
+import {
+    MessageResponse
+} from '../../../helpers/messageResponse'
 /**
  *
  *
@@ -13,21 +19,25 @@ import randomString from 'crypto-random-string'
  * @return {object} 
  */
 export const registerService = async (username, name, lastname, email, password) => {
-    
-    hashPassword = await bcrypt.hash( password, 12 )
+    try {
+        hashPassword = await bcrypt.hash(password, 12)
 
-    const defaultRole = await Role.findOne({'name':'user'})
+        const defaultRole = await Role.findOne({ 'name': 'user' })
 
-    const user = new User({
-        username,
-        name,
-        email,
-        lastname,
-        password: hashPassword,
-        role: defaultRole
-    })
+        const user = new User({
+            username,
+            name,
+            email,
+            lastname,
+            password: hashPassword,
+            role: defaultRole
+        })
 
-    await user.save()
-    
-    return user
+        await user.save()
+
+        return user
+    } catch (error) {
+        logError('registerService', error)
+        throw (MessageResponse.serviceCatch(error))
+    }
 }

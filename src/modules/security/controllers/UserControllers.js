@@ -12,22 +12,17 @@ import {
     updateUser,
     updateAddressService
 } from '../services/UserService';
-import { validationResult } from "express-validator";
 import { registerService } from '../services/RegisterService'
 import mail from '../../middleware/nodemailer'
 import templates from '../utils/templatesMail'
 import {
-    createResponseFormat
-} from '../../../helpers/responseFormat'
-import {
     MessageResponse
 } from '../../../helpers/messageResponse'
-let response = createResponseFormat()
 
 //Register
 exports.signup = async (req, res, next) => {
 
-    logRequest(req)
+    let response = logRequest(req)
 
     const { name, lastname, email, password } = req.body;
 
@@ -52,7 +47,7 @@ exports.signup = async (req, res, next) => {
 
 module.exports.updatePasswordUserAction = async function (req, res) {
 
-    logRequest(req)
+    let response = logRequest(req)
 
     let { currentPassword, newPassword } = req.body
     //Verifico si el usuario existe en la base de datos
@@ -71,36 +66,22 @@ module.exports.updatePasswordUserAction = async function (req, res) {
 
 module.exports.updatePasswordAdminAction = async function (req, res) {
 
-    logRequest(req)
-
-    let response = [{
-        errors: [],
-        message: '',
-        data: [],
-    }]
-
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-        response[0].errors = errors.array()
-        response[0].message = 'La petición no fue exitosa'
-        return res.status(400).json(response)
-    }
+    let response = logRequest(req)
 
     const user = await updatePasswordAdmin(req.params.id, req.body.password);
 
     if (!user) {
-        response[0].message = 'El usuario con ese ID no existe'
+        response.message = 'El usuario con ese ID no existe'
         return res.status(404).json(response)
     }
 
-    response[0].message = 'Se modifico la contraseña con exito'
+    response.message = 'Se modifico la contraseña con exito'
     res.status(200).json(response)
 }
 
 module.exports.addUserAction = async function (req, res) {
 
-    logRequest(req)
+    let response = logRequest(req)
 
     let { name, username, email, password, address,
         latitude, longitude, role, state } = req.body
@@ -131,48 +112,42 @@ module.exports.getUserAction = async function (req, res) {
 
 module.exports.updateUserAction = async function (req, res) {
 
-    logRequest(req)
-
-    const errors = validationResult(req);
+    let response = logRequest(req)
 
     const { username, name, lastname, email, phone, address, latitude, longitude } = req.body
-
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
 
     try {
         const userUpdate = await updateUser(req.params.id, username,
             name, lastname, email, phone, address,
             latitude, longitude);
 
-        response.message = 'User updated success'
+        response.data = userUpdate
         res.status(200).send(userUpdate);
     }
     catch (error) {
         response.errors.push(error);
         logError(req, error);
-        res.status(400).send({ error: error.message });
+        res.status(500).send({ error: error.message });
     }
 
 }
 
 module.exports.updateAddressAction = async function (req, res) {
 
-    logRequest(req)
+    let response = logRequest(req)
 
     const { address } = req.body;
 
     try {
         const userUpdate = await updateAddressService(req.user._id, address);
 
-        response.message = 'User updated success'
-        res.status(200).send(userUpdate);
+        response.data = userUpdate
+        res.status(200).send(response);
     }
     catch (error) {
         response.errors.push(error);
         logError(req, error);
-        res.status(400).send({ error: error.message });
+        res.status(500).send({ error: error.message });
     }
 
 }

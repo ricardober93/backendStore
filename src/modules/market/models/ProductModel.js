@@ -1,25 +1,25 @@
 import {
     Schema,
     model
-  } from "mongoose";
-  
+} from "mongoose";
+
 const ProductSchema = new Schema(
     {
         name: { type: String, required: true },
         description: { type: String, required: true },
         price: { type: Number, required: true },
         image_preview: { type: String, default: '.' },
-        image: { type: Array },
+        images: { type: Array },
         raiting: { type: Number },
         SKU: { type: String, required: true },
         stock: { type: Number },
         featured: { type: Boolean },
-        state: { type: String,  required: true },
-        brand: { 
+        state: { type: String, required: true },
+        brand: {
             type: Schema.ObjectId,
             ref: 'brand'
         },
-        category: { 
+        category: {
             type: Schema.ObjectId,
             ref: 'category'
         },

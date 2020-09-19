@@ -1,14 +1,10 @@
 import jsonwebtoken from "jsonwebtoken";
 import { logRequest, logError } from '../../logger/logger'
 import { authService, authMethodService } from '../services/AuthService'
-import {
-    createResponseFormat
-} from '../../../helpers/responseFormat'
-let response = createResponseFormat()
 
 module.exports.authAction = async function (req, res) {
 
-    logRequest(req)
+    let response = logRequest(req)
 
     try {
         const authResult = await authService(req.body.email, req.body.password)
@@ -30,7 +26,7 @@ module.exports.authAction = async function (req, res) {
 
 module.exports.authMethodAction = async function (req, res) {
 
-    logRequest(req)
+    let response = logRequest(req)
 
     let { email, givenName, familyName, googleId } = req.body;
 
