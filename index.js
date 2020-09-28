@@ -2,7 +2,6 @@
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import express from 'express';
-import mailchimp from "@mailchimp/mailchimp_marketing";
 //import SetupPassport from './src/modules/middleware/Passport'
 import {
     logger
@@ -39,21 +38,6 @@ app.use(function (err, req, res, next) {
     res.status(500).send('Something broke!');
 });
 
-//configuración mailChampi Api
-mailchimp.setConfig({
-    apiKey: process.env.MAIL_CHAMPI_APIKEY,
-    server: process.env.CHAMPI_SERVER,
-});
-
-async function run() {
-    const response = await mailchimp.ping.get();
-    console.log(response);
-}
-
-run();
-
-
-
 //CORS Middleware
 app.use(corsMiddleware);
 
@@ -75,7 +59,6 @@ app.use('/', securityRoutes);
 app.use('/', customizationRoutes);
 app.use('/', marketRoutes);
 app.use('/', mailChampiRoutes)
-
 
 //Then initializate server
 app.listen(port, async () => {

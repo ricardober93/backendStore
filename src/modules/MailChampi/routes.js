@@ -6,4 +6,8 @@ import {
 const router = express.Router();
 
 //Retorna una prueba
-router.get('/api/suscribe', pinAction);
+router.post('/api/suscribe', pinAction);
+
+
+
+export default router;
