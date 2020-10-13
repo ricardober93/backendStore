@@ -3,13 +3,20 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import express from 'express';
 //import SetupPassport from './src/modules/middleware/Passport'
-import { logger } from './src/modules/logger/logger';
-import { jwtAuth, handleAuthError } from './src/modules/security/middleware/auth';
+import {
+    logger
+} from './src/modules/logger/logger';
+import {
+    jwtAuth,
+    handleAuthError
+} from './src/modules/security/middleware/auth';
 import rbacMiddleware from './src/modules/security/middleware/rbacMiddleware';
 import corsMiddleware from "./src/modules/middleware/corsMiddleware";
 import securityRoutes from './src/modules/security/routes'
 import customizationRoutes from './src/modules/customization/routes'
 import marketRoutes from './src/modules/market/routes'
+import mailChampiRoutes from './src/modules/MailChampi/routes'
+
 
 const app = express();
 dotenv.config();
@@ -35,7 +42,9 @@ app.use(function (err, req, res, next) {
 app.use(corsMiddleware);
 
 //Body Parse
-app.use(express.urlencoded({extended:false}));
+app.use(express.urlencoded({
+    extended: false
+}));
 app.use(express.json());
 
 //AUTH Middleware
@@ -49,14 +58,21 @@ app.use(rbacMiddleware)
 app.use('/', securityRoutes);
 app.use('/', customizationRoutes);
 app.use('/', marketRoutes);
+app.use('/', mailChampiRoutes)
 
 //Then initializate server
 app.listen(port, async () => {
-    
+
     //Connecting database first
-    await mongoose.connect( db , { useNewUrlParser: true, useUnifiedTopology: true, socketTimeoutMS: 10000, useFindAndModify: false, useCreateIndex: false })
+    await mongoose.connect(db, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            socketTimeoutMS: 10000,
+            useFindAndModify: false,
+            useCreateIndex: false
+        })
         .then(() => logger.info('Conectado correctamente a MongoDB'))
         .catch(() => logger.info('Error al conectarse a MongoDB'))
-    
+
     logger.info('Escuchando puerto: ' + port)
 });
